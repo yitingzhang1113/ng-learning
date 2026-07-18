@@ -2,6 +2,8 @@
 
 算法刷题路线图 + OOD 面试准备。
 
+路线图结构参考 [labuladong 的算法路线](https://labuladong.online/zh/roadmap/algo/)。
+
 **在线访问:** https://yitingzhang1113.github.io/ng-learning/
 
 ## 本地运行

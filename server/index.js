@@ -10,9 +10,9 @@ const PORT = process.env.PORT || 8787
 const API_TOKEN = process.env.API_TOKEN || ''
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || '*'
 
-// 单用户 key-value 存储:status / notes / problemNotes / lang,对应前端 useStore.js 的四份数据
-const ALLOWED_KEYS = new Set(['status', 'notes', 'problemNotes', 'lang'])
-const DEFAULTS = { status: {}, notes: {}, problemNotes: {}, lang: 'zh' }
+// 单用户 key-value 存储,对应前端 useStore.js 的几份数据
+const ALLOWED_KEYS = new Set(['status', 'notes', 'problemNotes', 'customProblems', 'materials', 'lang'])
+const DEFAULTS = { status: {}, notes: {}, problemNotes: {}, customProblems: {}, materials: {}, lang: 'zh' }
 
 const db = new Database(path.join(__dirname, 'data.sqlite'))
 db.exec(`

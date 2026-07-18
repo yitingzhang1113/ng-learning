@@ -5,6 +5,6 @@ import react from '@vitejs/plugin-react'
 // 例如仓库叫 algo-roadmap,就写 base: '/algo-roadmap/'
 // 如果用的是 <用户名>.github.io 这种根仓库,保持 '/' 即可。
 export default defineConfig({
-  base: './',
+  base: '/ng-learning/',
   plugins: [react()],
 })

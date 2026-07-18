@@ -1,0 +1,16 @@
+{
+  "name": "algo-roadmap-server",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "算法题单笔记的持久化后端(单用户,SQLite)",
+  "scripts": {
+    "start": "node --env-file=.env index.js",
+    "dev": "node --watch --env-file=.env index.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}

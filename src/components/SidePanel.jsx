@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { Fragment, useState, useRef, useEffect, useCallback } from 'react'
 import { DIFF } from '../data/roadmap.js'
 import { useLang, pick, pick2 } from '../i18n.js'
 import ProblemNoteEditor, { noteFilled } from './ProblemNoteEditor.jsx'
@@ -140,6 +140,16 @@ export default function SidePanel({
     ...customs.map((pr) => ({ pr, idx: pr.id, custom: true })),
   ]
   const solved = merged.filter(({ idx }) => status[`${node.id}#${idx}`] === 'solved').length
+
+  // 有些板块把题目按套路分成几个小组展示(只在这个窗口里分类,不额外占路线图节点)
+  const groupAt = {}
+  if (node.problemGroups) {
+    let offset = 0
+    node.problemGroups.forEach((g) => {
+      groupAt[offset] = g
+      offset += g.count
+    })
+  }
 
   const submitProblem = () => {
     const en = pEn.trim()
@@ -291,13 +301,26 @@ export default function SidePanel({
                 <>
                   <span className="pt-en">
                     {pick(lang, pr)}
+                    {pr.hot && (
+                      <span className="hot-star" title={t('hotTag')}>
+                        {'★'.repeat(typeof pr.hot === 'number' ? pr.hot : 1)}
+                      </span>
+                    )}
+                    {pr.locked && <span className="locked-tag" title={t('lockedTag')}>🔒</span>}
                     {custom && <span className="custom-tag">{t('customTag')}</span>}
                   </span>
                   <span className="pt-zh">{pick2(lang, pr)}</span>
                 </>
               )
+              const groupHead = !custom && groupAt[idx]
               return (
-                <li key={key} className={`${cls}${open ? ' open' : ''}`}>
+                <Fragment key={key}>
+                  {groupHead && (
+                    <li className="problem-group-head">
+                      <span>{pick(lang, groupHead)}</span>
+                    </li>
+                  )}
+                  <li className={`${cls}${open ? ' open' : ''}`}>
                   <div className="problem-row">
                     <button
                       className={`status-btn ${cls}`}
@@ -342,7 +365,8 @@ export default function SidePanel({
                       />
                     </div>
                   )}
-                </li>
+                  </li>
+                </Fragment>
               )
             })}
           </ul>

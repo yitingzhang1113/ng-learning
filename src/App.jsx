@@ -6,6 +6,7 @@ import RoadmapView from './components/RoadmapView.jsx'
 import NotesPage from './components/NotesPage.jsx'
 import PrepPage from './components/PrepPage.jsx'
 import NotePage from './components/NotePage.jsx'
+import logo from './assets/logo.png'
 import './App.css'
 
 export default function App() {
@@ -53,7 +54,7 @@ export default function App() {
     <LangContext.Provider value={langCtx}>
       <div className="app">
         <header className="topbar">
-          <div className="brand">🧭 {t('brand')}</div>
+          <div className="brand"><img src={logo} className="brand-logo" alt="" /> {t('brand')}</div>
           <div className="topbar-right">
             <nav className="nav">
               {NAV.map((n) => (

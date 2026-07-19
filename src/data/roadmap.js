@@ -39,7 +39,13 @@ export const THEMES = {
   gray: { bg: '#F6F7F9', border: '#DDE1E6', accent: '#9AA4B0', label: '#5B6570' },      // 浅灰 · 根节点
 }
 
-const p = (en, zh, diff, slug) => ({ en, zh, diff, url: `https://leetcode.com/problems/${slug}/` })
+// hot: true(单星)或数字(几颗星,标注高频程度)
+const p = (en, zh, diff, slug, hot) => ({
+  en, zh, diff, url: `https://leetcode.com/problems/${slug}/`,
+  ...(hot ? { hot } : {}),
+})
+// 会员题(🔒 需要 LeetCode 订阅才能看):lock(p(...))
+const lock = (problem) => ({ ...problem, locked: true })
 
 export const NODES = [
   // ───────── 根 ─────────
@@ -126,12 +132,37 @@ export const NODES = [
     ],
   },
   {
-    id: 'matrix', kind: 'topic', group: 'arrayops', zh: '二维数组', en: '2D Array',
+    // 大厂高频,替换掉原来的「二维数组」板块。题目按套路分成 5 个小组,
+    // 只在这个板块自己的窗口里当小标题展示,不额外占路线图节点。
+    id: 'simulation', kind: 'topic', group: 'arrayops', zh: '数组模拟', en: 'Array Simulation',
+    problemGroups: [
+      { zh: '数值与进位模拟', en: 'Numeric & Carry Simulation', count: 5 },
+      { zh: '矩阵边界与坐标模拟', en: 'Matrix Boundary & Coordinate Simulation', count: 4 },
+      { zh: '方向与路径模拟', en: 'Direction & Path Simulation', count: 3 },
+      { zh: '原地状态更新', en: 'In-place State Update', count: 2 },
+      { zh: '复杂规则与格式化', en: 'Complex Rules & Formatting', count: 1 },
+    ],
     problems: [
-      p('Rotate Image', '旋转图像', 'Medium', 'rotate-image'),
-      p('Spiral Matrix', '螺旋矩阵', 'Medium', 'spiral-matrix'),
+      // 1. 数值与进位模拟
+      p('Add Strings', '字符串相加', 'Easy', 'add-strings', true),
+      p('Add Binary', '二进制求和', 'Easy', 'add-binary', true),
+      p('Plus One', '加一', 'Easy', 'plus-one'),
+      p('Add to Array-Form of Integer', '数组形式的整数加法', 'Easy', 'add-to-array-form-of-integer'),
+      p('Multiply Strings', '字符串相乘', 'Medium', 'multiply-strings'),
+      // 2. 矩阵边界与坐标模拟
+      p('Spiral Matrix', '螺旋矩阵', 'Medium', 'spiral-matrix', true),
       p('Spiral Matrix II', '螺旋矩阵 II', 'Medium', 'spiral-matrix-ii'),
-      p('Reverse Words in a String', '反转字符串中的单词', 'Medium', 'reverse-words-in-a-string'),
+      p('Rotate Image', '旋转图像', 'Medium', 'rotate-image', true),
+      p('Diagonal Traverse', '对角线遍历', 'Medium', 'diagonal-traverse'),
+      // 3. 方向与路径模拟
+      p('Walking Robot Simulation', '模拟行走机器人', 'Medium', 'walking-robot-simulation'),
+      p('Where Will the Ball Fall', '球会落何处', 'Medium', 'where-will-the-ball-fall'),
+      p('Zigzag Conversion', 'Z 字形变换', 'Medium', 'zigzag-conversion'),
+      // 4. 原地状态更新
+      p('Set Matrix Zeroes', '矩阵置零', 'Medium', 'set-matrix-zeroes', true),
+      p('Game of Life', '生命游戏', 'Medium', 'game-of-life', true),
+      // 5. 复杂规则与格式化
+      p('Text Justification', '文本左右对齐', 'Hard', 'text-justification', true),
     ],
   },
 
@@ -149,30 +180,65 @@ export const NODES = [
     ],
   },
   {
+    // 题目按套路分成 4 个小组,只在这个板块自己的窗口里当小标题展示,不额外占路线图节点。
     id: 'sliding', kind: 'topic', group: 'twopointer', zh: '滑动窗口', en: 'Sliding Window',
+    problemGroups: [
+      { zh: '定长窗口', en: 'Fixed-size Window', count: 3 },
+      { zh: '最长合法窗口', en: 'Longest Valid Window', count: 4 },
+      { zh: '最短合法窗口', en: 'Minimum Valid Window', count: 2 },
+      { zh: '计数与增强窗口', en: 'Counting & Advanced', count: 4 },
+    ],
     problems: [
-      p('Minimum Operations to Reduce X to Zero', '将 x 减到 0 的最小操作数', 'Medium', 'minimum-operations-to-reduce-x-to-zero'),
-      p('Subarray Product Less Than K', '乘积小于 K 的子数组', 'Medium', 'subarray-product-less-than-k'),
-      p('Max Consecutive Ones III', '最大连续 1 的个数 III', 'Medium', 'max-consecutive-ones-iii'),
-      p('Longest Repeating Character Replacement', '替换后的最长重复字符', 'Medium', 'longest-repeating-character-replacement'),
+      // 1. 定长窗口
       p('Contains Duplicate II', '存在重复元素 II', 'Easy', 'contains-duplicate-ii'),
-      p('Minimum Size Subarray Sum', '长度最小的子数组', 'Medium', 'minimum-size-subarray-sum'),
+      p('Find All Anagrams in a String', '找到字符串中所有字母异位词', 'Medium', 'find-all-anagrams-in-a-string', true),
+      p('Permutation in String', '字符串的排列', 'Medium', 'permutation-in-string', true),
+      // 2. 最长合法窗口
+      p('Longest Substring Without Repeating Characters', '无重复字符的最长子串', 'Medium', 'longest-substring-without-repeating-characters', true),
+      p('Longest Repeating Character Replacement', '替换后的最长重复字符', 'Medium', 'longest-repeating-character-replacement', true),
+      p('Fruit Into Baskets', '水果成篮', 'Medium', 'fruit-into-baskets', true),
+      p('Max Consecutive Ones III', '最大连续 1 的个数 III', 'Medium', 'max-consecutive-ones-iii', true),
+      // 3. 最短合法窗口
+      p('Minimum Size Subarray Sum', '长度最小的子数组', 'Medium', 'minimum-size-subarray-sum', true),
+      p('Minimum Window Substring', '最小覆盖子串', 'Hard', 'minimum-window-substring', true),
+      // 4. 计数与增强窗口
+      p('Subarray Product Less Than K', '乘积小于 K 的子数组', 'Medium', 'subarray-product-less-than-k'),
+      p('Sliding Window Maximum', '滑动窗口最大值', 'Hard', 'sliding-window-maximum', true),
+      p('Best Time to Buy and Sell Stock', '买卖股票的最佳时机', 'Easy', 'best-time-to-buy-and-sell-stock'),
+      p('Find K Closest Elements', '找到 K 个最接近的元素', 'Medium', 'find-k-closest-elements'),
     ],
   },
   {
+    // 题目按套路分成 4 个小组,只在这个板块自己的窗口里当小标题展示,不额外占路线图节点。
     id: 'binsearch', kind: 'topic', group: 'twopointer', zh: '二分搜索', en: 'Binary Search',
+    problemGroups: [
+      { zh: '基础查找与边界', en: 'Basic Search & Boundaries', count: 4 },
+      { zh: '特殊有序数组', en: 'Special Sorted Arrays', count: 6 },
+      { zh: '二分答案', en: 'Binary Search on Answer', count: 5 },
+      { zh: '第 K 小与高级二分', en: 'Kth Smallest & Advanced', count: 2 },
+    ],
     problems: [
-      p('Search a 2D Matrix', '搜索二维矩阵', 'Medium', 'search-a-2d-matrix'),
-      p('Search a 2D Matrix II', '搜索二维矩阵 II', 'Medium', 'search-a-2d-matrix-ii'),
-      p('Is Subsequence', '判断子序列', 'Easy', 'is-subsequence'),
-      p('Number of Matching Subsequences', '匹配子序列的单词数', 'Medium', 'number-of-matching-subsequences'),
-      p('Find K Closest Elements', '找到 K 个最接近的元素', 'Medium', 'find-k-closest-elements'),
-      p('Search Insert Position', '搜索插入位置', 'Easy', 'search-insert-position'),
-      p('Find Peak Element', '寻找峰值', 'Medium', 'find-peak-element'),
-      p('Peak Index in a Mountain Array', '山脉数组的峰顶索引', 'Medium', 'peak-index-in-a-mountain-array'),
-      p('Search in Rotated Sorted Array', '搜索旋转排序数组', 'Medium', 'search-in-rotated-sorted-array'),
-      p('Search in Rotated Sorted Array II', '搜索旋转排序数组 II', 'Medium', 'search-in-rotated-sorted-array-ii'),
-      p('Find Minimum in Rotated Sorted Array', '寻找旋转排序数组中的最小值', 'Medium', 'find-minimum-in-rotated-sorted-array'),
+      // 1. 基础查找与边界
+      p('Binary Search', '二分查找', 'Easy', 'binary-search', 3),
+      p('Search Insert Position', '搜索插入位置', 'Easy', 'search-insert-position', 3),
+      p('Find First and Last Position of Element in Sorted Array', '在排序数组中查找元素的第一个和最后一个位置', 'Medium', 'find-first-and-last-position-of-element-in-sorted-array', 3),
+      p('Sqrt(x)', 'x 的平方根', 'Easy', 'sqrtx', 2),
+      // 2. 特殊有序数组
+      p('Search a 2D Matrix', '搜索二维矩阵', 'Medium', 'search-a-2d-matrix', 3),
+      p('Search in Rotated Sorted Array', '搜索旋转排序数组', 'Medium', 'search-in-rotated-sorted-array', 3),
+      p('Find Minimum in Rotated Sorted Array', '寻找旋转排序数组中的最小值', 'Medium', 'find-minimum-in-rotated-sorted-array', 3),
+      p('Search in Rotated Sorted Array II', '搜索旋转排序数组 II', 'Medium', 'search-in-rotated-sorted-array-ii', 2),
+      p('Time Based Key Value Store', '基于时间的键值存储', 'Medium', 'time-based-key-value-store', 3),
+      p('Find in Mountain Array', '山脉数组中查找目标值', 'Hard', 'find-in-mountain-array', 2),
+      // 3. 二分答案 Binary Search on Answer
+      p('Koko Eating Bananas', '爱吃香蕉的珂珂', 'Medium', 'koko-eating-bananas', 3),
+      p('Capacity To Ship Packages Within D Days', '在 D 天内送达包裹的能力', 'Medium', 'capacity-to-ship-packages-within-d-days', 3),
+      p('Minimum Number of Days to Make m Bouquets', '制作 m 束花所需的最少天数', 'Medium', 'minimum-number-of-days-to-make-m-bouquets', 2),
+      p('Split Array Largest Sum', '分割数组的最大值', 'Hard', 'split-array-largest-sum', 3),
+      p('Maximum Running Time of N Computers', '同时运行 N 台电脑的最长时间', 'Medium', 'maximum-running-time-of-n-computers', 2),
+      // 4. 第 K 小与高级二分
+      p('Kth Smallest Element in a Sorted Matrix', '有序矩阵中第 K 小的元素', 'Medium', 'kth-smallest-element-in-a-sorted-matrix', 2),
+      p('Median of Two Sorted Arrays', '寻找两个正序数组的中位数', 'Hard', 'median-of-two-sorted-arrays', 3),
     ],
   },
   {
@@ -205,18 +271,6 @@ export const NODES = [
       p('Minimum Number of Arrows to Burst Balloons', '用最少数量的箭引爆气球', 'Medium', 'minimum-number-of-arrows-to-burst-balloons'),
       p('Video Stitching', '视频拼接', 'Medium', 'video-stitching'),
       p('Employee Free Time', '员工空闲时间', 'Hard', 'employee-free-time'),
-    ],
-  },
-  {
-    id: 'simulation', kind: 'topic', group: 'arraypatterns', zh: '数组模拟', en: 'Array Simulation',
-    problems: [
-      p('Game of Life', '生命游戏', 'Medium', 'game-of-life'),
-      p('Multiply Strings', '字符串相乘', 'Medium', 'multiply-strings'),
-      p('Add Strings', '字符串相加', 'Easy', 'add-strings'),
-      p('Zigzag Conversion', 'Z 字形变换', 'Medium', 'zigzag-conversion'),
-      p('Count and Say', '外观数列', 'Medium', 'count-and-say'),
-      p('Validate Stack Sequences', '验证栈序列', 'Medium', 'validate-stack-sequences'),
-      p('Text Justification', '文本左右对齐', 'Hard', 'text-justification'),
     ],
   },
   {
@@ -285,7 +339,32 @@ export const NODES = [
   },
 
   // ═════════ 链表分支 ═════════
-  { id: 'linkedlist', kind: 'milestone', theme: 'pink', zh: '链表', en: 'Linked List', problems: [] },
+  {
+    // 题目按套路分成 4 个小组,只在这个板块自己的窗口里当小标题展示,不额外占路线图节点。
+    // Reverse Linked List / Reverse Nodes in K-Group 在「递归」板块也有(反转技巧本来就是递归的经典例子);
+    // Copy List with Random Pointer 在「哈希」板块也有(拷贝技巧用到了哈希表)—— 两边都保留,方便各自打卡。
+    id: 'linkedlist', kind: 'milestone', theme: 'pink', zh: '链表', en: 'Linked List',
+    problemGroups: [
+      { zh: '链表反转与区间操作', en: 'Reversal & Range Operations', count: 3 },
+      { zh: '链表合并', en: 'Merging', count: 2 },
+      { zh: '链表删除与重排', en: 'Deletion & Reordering', count: 2 },
+      { zh: '特殊链表与深拷贝', en: 'Special Lists & Deep Copy', count: 1 },
+    ],
+    problems: [
+      // 1. 链表反转与区间操作
+      p('Reverse Linked List', '反转链表', 'Easy', 'reverse-linked-list', 3),
+      p('Reverse Linked List II', '反转链表 II', 'Medium', 'reverse-linked-list-ii', 3),
+      p('Reverse Nodes in K-Group', 'K 个一组翻转链表', 'Hard', 'reverse-nodes-in-k-group', 3),
+      // 2. 链表合并
+      p('Merge Two Sorted Lists', '合并两个有序链表', 'Easy', 'merge-two-sorted-lists', 3),
+      p('Merge K Sorted Lists', '合并 K 个升序链表', 'Hard', 'merge-k-sorted-lists', 3),
+      // 3. 链表删除与重排
+      p('Reorder List', '重排链表', 'Medium', 'reorder-list', 3),
+      p('Remove Nth Node From End of List', '删除链表的倒数第 N 个结点', 'Medium', 'remove-nth-node-from-end-of-list', 3),
+      // 4. 特殊链表与深拷贝
+      p('Copy List with Random Pointer', '随机链表的复制', 'Medium', 'copy-list-with-random-pointer', 3),
+    ],
+  },
   {
     id: 'fastslow', kind: 'milestone', theme: 'pink', zh: '快慢指针', en: 'Fast & Slow Pointers',
     problems: [
@@ -293,17 +372,20 @@ export const NODES = [
       p('Linked List Cycle II', '环形链表 II', 'Medium', 'linked-list-cycle-ii'),
       p('Middle of the Linked List', '链表的中间结点', 'Easy', 'middle-of-the-linked-list'),
       p('Happy Number', '快乐数', 'Easy', 'happy-number'),
-      p('Circular Array Loop', '环形数组是否存在循环', 'Medium', 'circular-array-loop'),
+      p('Find the Duplicate Number', '寻找重复数', 'Medium', 'find-the-duplicate-number'),
     ],
   },
   {
     id: 'lltwopointer', kind: 'milestone', theme: 'pink', zh: '链表双指针', en: 'Linked List Two Pointers',
     problems: [
-      p('Remove Duplicates from Sorted List II', '删除排序链表中的重复元素 II', 'Medium', 'remove-duplicates-from-sorted-list-ii'),
-      p('Find K Pairs with Smallest Sums', '查找和最小的 K 对数字', 'Medium', 'find-k-pairs-with-smallest-sums'),
-      p('Add Two Numbers', '两数相加', 'Medium', 'add-two-numbers'),
-      p('Add Two Numbers II', '两数相加 II', 'Medium', 'add-two-numbers-ii'),
-      p('Find the Duplicate Number', '寻找重复数(快慢指针)', 'Medium', 'find-the-duplicate-number'),
+      p('Merge Two Sorted Lists', '合并两个有序链表', 'Easy', 'merge-two-sorted-lists'),
+      p('Partition List', '分隔链表', 'Medium', 'partition-list'),
+      p('Merge K Sorted Lists', '合并 K 个升序链表', 'Hard', 'merge-k-sorted-lists'),
+      p('Remove Nth Node From End of List', '删除链表的倒数第 N 个结点', 'Medium', 'remove-nth-node-from-end-of-list'),
+      p('Middle of the Linked List', '链表的中间结点', 'Easy', 'middle-of-the-linked-list'),
+      p('Linked List Cycle II', '环形链表 II', 'Medium', 'linked-list-cycle-ii'),
+      p('Intersection of Two Linked Lists', '相交链表', 'Easy', 'intersection-of-two-linked-lists'),
+      p('Linked List Cycle', '环形链表', 'Easy', 'linked-list-cycle'),
     ],
   },
   {
@@ -365,16 +447,38 @@ export const NODES = [
     ],
   },
   {
+    // 题目按套路分成 5 个小组,只在这个板块自己的窗口里当小标题展示,不额外占路线图节点。
+    // 有几道题(冗余连接 / 图有效树 / 连通分量数目)既是环检测的经典例子,也是并查集的经典例子,
+    // 按你给的大纲在两个小组里都保留了一份,方便从两个角度分别打卡/记笔记。
     id: 'graph', kind: 'topic', group: 'advds', zh: '图', en: 'Graph',
+    problemGroups: [
+      { zh: '图的建模、入度与出度', en: 'Modeling, In-degree & Out-degree', count: 2 },
+      { zh: '拓扑排序与依赖关系', en: 'Topological Sort & Dependencies', count: 4 },
+      { zh: '连通性、环与判树', en: 'Connectivity, Cycles & Tree Check', count: 3 },
+      { zh: '并查集', en: 'Union-Find', count: 4 },
+      { zh: '最小生成树', en: 'Minimum Spanning Tree', count: 2 },
+    ],
     problems: [
-      p('Clone Graph', '克隆图', 'Medium', 'clone-graph'),
-      p('Is Graph Bipartite?', '判断二分图', 'Medium', 'is-graph-bipartite'),
-      p('Possible Bipartition', '可能的二分法', 'Medium', 'possible-bipartition'),
-      p('Course Schedule', '课程表(环检测)', 'Medium', 'course-schedule'),
-      p('Course Schedule II', '课程表 II(拓扑排序)', 'Medium', 'course-schedule-ii'),
-      p('Satisfiability of Equality Equations', '等式方程的可满足性(并查集)', 'Medium', 'satisfiability-of-equality-equations'),
-      p('Connecting Cities With Minimum Cost', '最低成本联通所有城市(最小生成树)', 'Medium', 'connecting-cities-with-minimum-cost'),
-      p('Min Cost to Connect All Points', '连接所有点的最小费用(最小生成树)', 'Medium', 'min-cost-to-connect-all-points'),
+      // 1. 图的建模、入度与出度
+      p('Find the Town Judge', '找到小镇的法官', 'Easy', 'find-the-town-judge', 2),
+      p('Verifying an Alien Dictionary', '验证外星语词典', 'Easy', 'verifying-an-alien-dictionary', 1),
+      // 2. 拓扑排序与依赖关系
+      p('Course Schedule', '课程表(环检测)', 'Medium', 'course-schedule', 3),
+      p('Course Schedule II', '课程表 II(拓扑排序)', 'Medium', 'course-schedule-ii', 3),
+      p('Course Schedule IV', '课程表 IV', 'Medium', 'course-schedule-iv', 2),
+      p('Minimum Height Trees', '最小高度树', 'Medium', 'minimum-height-trees', 2),
+      // 3. 连通性、环与判树
+      lock(p('Graph Valid Tree', '图有效树', 'Medium', 'graph-valid-tree', 3)),
+      lock(p('Number of Connected Components in an Undirected Graph', '无向图中连通分量的数目', 'Medium', 'number-of-connected-components-in-an-undirected-graph', 3)),
+      p('Redundant Connection', '冗余连接', 'Medium', 'redundant-connection', 3),
+      // 4. 并查集 Union-Find
+      p('Redundant Connection', '冗余连接', 'Medium', 'redundant-connection', 3),
+      p('Accounts Merge', '账户合并', 'Medium', 'accounts-merge', 3),
+      lock(p('Number of Connected Components in an Undirected Graph', '无向图中连通分量的数目', 'Medium', 'number-of-connected-components-in-an-undirected-graph', 3)),
+      lock(p('Graph Valid Tree', '图有效树', 'Medium', 'graph-valid-tree', 3)),
+      // 5. 最小生成树 Minimum Spanning Tree
+      lock(p('Connecting Cities With Minimum Cost', '最低成本联通所有城市', 'Medium', 'connecting-cities-with-minimum-cost', 3)),
+      p('Min Cost to Connect All Points', '连接所有点的最小费用', 'Medium', 'min-cost-to-connect-all-points', 3),
     ],
   },
 
@@ -419,14 +523,26 @@ export const NODES = [
     ],
   },
   {
+    // 题目按套路分成 2 个小组,只在这个板块自己的窗口里当小标题展示,不额外占路线图节点。
     id: 'dfs', kind: 'topic', group: 'traversalview', zh: '深度优先搜索', en: 'DFS',
+    problemGroups: [
+      { zh: '网格 DFS:岛屿、边界与连通区域', en: 'Grid DFS: Islands, Borders & Connected Regions', count: 9 },
+      { zh: '图 DFS:遍历、复制与路径搜索', en: 'Graph DFS: Traversal, Cloning & Path Search', count: 2 },
+    ],
     problems: [
-      p('Number of Islands', '岛屿数量', 'Medium', 'number-of-islands'),
-      p('Number of Closed Islands', '统计封闭岛屿的数目', 'Medium', 'number-of-closed-islands'),
-      p('Number of Enclaves', '飞地的数量', 'Medium', 'number-of-enclaves'),
-      p('Max Area of Island', '岛屿的最大面积', 'Medium', 'max-area-of-island'),
-      p('Count Sub Islands', '统计子岛屿', 'Medium', 'count-sub-islands'),
-      p('Number of Distinct Islands', '不同岛屿的数量', 'Medium', 'number-of-distinct-islands'),
+      // 1. 网格 DFS
+      p('Number of Islands', '岛屿数量', 'Medium', 'number-of-islands', 3),
+      p('Max Area of Island', '岛屿的最大面积', 'Medium', 'max-area-of-island', 3),
+      p('Island Perimeter', '岛屿的周长', 'Easy', 'island-perimeter', 2),
+      p('Surrounded Regions', '被围绕的区域', 'Medium', 'surrounded-regions', 3),
+      p('Pacific Atlantic Water Flow', '太平洋大西洋水流问题', 'Medium', 'pacific-atlantic-water-flow', 3),
+      p('Number of Closed Islands', '统计封闭岛屿的数目', 'Medium', 'number-of-closed-islands', 2),
+      p('Number of Enclaves', '飞地的数量', 'Medium', 'number-of-enclaves', 2),
+      p('Count Sub Islands', '统计子岛屿', 'Medium', 'count-sub-islands', 2),
+      lock(p('Number of Distinct Islands', '不同岛屿的数量', 'Medium', 'number-of-distinct-islands', 2)),
+      // 2. 图 DFS
+      p('Clone Graph', '克隆图', 'Medium', 'clone-graph', 3),
+      p('Evaluate Division', '除法求值', 'Medium', 'evaluate-division', 3),
     ],
   },
 
@@ -463,13 +579,26 @@ export const NODES = [
 
   // 层序遍历 → BFS → 最短路径
   {
+    // 题目按套路分成 2 个小组,只在这个板块自己的窗口里当小标题展示,不额外占路线图节点。
     id: 'bfs', kind: 'milestone', theme: 'aqua', zh: '广度优先搜索', en: 'BFS',
+    problemGroups: [
+      { zh: '单源 BFS:分层遍历与无权最短路', en: 'Single-source BFS: Layered Traversal & Unweighted Shortest Path', count: 6 },
+      { zh: '多源 BFS:同步扩散与最近距离', en: 'Multi-source BFS: Simultaneous Spread & Nearest Distance', count: 5 },
+    ],
     problems: [
-      p('All Nodes Distance K in Binary Tree', '二叉树中所有距离为 K 的结点', 'Medium', 'all-nodes-distance-k-in-binary-tree'),
-      p('Minimum Height Trees', '最小高度树', 'Medium', 'minimum-height-trees'),
-      p('Keys and Rooms', '钥匙和房间', 'Medium', 'keys-and-rooms'),
-      p('Nearest Exit from Entrance in Maze', '迷宫中离入口最近的出口', 'Medium', 'nearest-exit-from-entrance-in-maze'),
-      p('Shortest Path in Binary Matrix', '二进制矩阵中的最短路径', 'Medium', 'shortest-path-in-binary-matrix'),
+      // 1. 单源 BFS
+      p('All Nodes Distance K in Binary Tree', '二叉树中所有距离为 K 的结点', 'Medium', 'all-nodes-distance-k-in-binary-tree', 3),
+      p('Shortest Path in Binary Matrix', '二进制矩阵中的最短路径', 'Medium', 'shortest-path-in-binary-matrix', 3),
+      p('Open the Lock', '打开转盘锁', 'Medium', 'open-the-lock', 3),
+      p('Word Ladder', '单词接龙', 'Hard', 'word-ladder', 3),
+      p('Keys and Rooms', '钥匙和房间', 'Medium', 'keys-and-rooms', 1),
+      p('Nearest Exit from Entrance in Maze', '迷宫中离入口最近的出口', 'Medium', 'nearest-exit-from-entrance-in-maze', 1),
+      // 2. 多源 BFS
+      lock(p('Walls and Gates', '墙与门', 'Medium', 'walls-and-gates', 3)),
+      p('Rotting Oranges', '腐烂的橘子', 'Medium', 'rotting-oranges', 3),
+      p('01 Matrix', '01 矩阵', 'Medium', '01-matrix', 3),
+      p('As Far from Land as Possible', '离陆地最远的距离', 'Medium', 'as-far-from-land-as-possible', 3),
+      p('Shortest Bridge', '最短的桥', 'Medium', 'shortest-bridge', 3),
     ],
   },
   {

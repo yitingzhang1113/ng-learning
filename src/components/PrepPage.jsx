@@ -95,6 +95,7 @@ export default function PrepPage({
             {sum.hasText && <span title="text">📝</span>}
             {sum.codeCount > 0 && <span title="code">💻{sum.codeCount}</span>}
             {sum.videoCount > 0 && <span title="video">🎬{sum.videoCount}</span>}
+            {sum.imageCount > 0 && <span title="image">🖼️{sum.imageCount}</span>}
           </div>
           {custom && (
             <button

@@ -389,12 +389,32 @@ export const NODES = [
     ],
   },
   {
+    // 单链表递归是进阶技巧:面试时可以展示递归思路,但笔试时用标准的指针操作即可。
     id: 'recursion', kind: 'milestone', theme: 'pink', zh: '递归', en: 'Recursion',
+    tutorials: [
+      { zh: '递归专题', en: 'Recursion I', url: 'https://leetcode.com/explore/learn/card/recursion-i/' },
+      { zh: '单链表的花式反转方法汇总', en: 'Fancy Ways to Reverse a Singly Linked List', url: 'https://labuladong.online/zh/algo/data-structure/reverse-linked-list-recursion/' },
+      { zh: '如何判断回文链表', en: 'How to Check a Palindrome Linked List', url: 'https://labuladong.online/zh/algo/data-structure/palindrome-linked-list/' },
+    ],
+    problemGroups: [
+      { zh: '单链表递归', en: 'Singly Linked List Recursion', count: 4 },
+      { zh: '其他递归', en: 'Other Recursion', count: 8 },
+    ],
     problems: [
-      p('Reverse Linked List', '反转链表', 'Easy', 'reverse-linked-list'),
-      p('Swap Nodes in Pairs', '两两交换链表中的节点', 'Medium', 'swap-nodes-in-pairs'),
-      p('Reverse Nodes in k-Group', 'K 个一组翻转链表', 'Hard', 'reverse-nodes-in-k-group'),
-      p('Palindrome Linked List', '回文链表', 'Easy', 'palindrome-linked-list'),
+      // 1. 单链表递归
+      p('Reverse Linked List', '反转链表', 'Easy', 'reverse-linked-list', 3),
+      p('Swap Nodes in Pairs', '两两交换链表中的节点', 'Medium', 'swap-nodes-in-pairs', 3),
+      p('Reverse Nodes in k-Group', 'K 个一组翻转链表', 'Hard', 'reverse-nodes-in-k-group', 3),
+      p('Palindrome Linked List', '回文链表', 'Easy', 'palindrome-linked-list', 3),
+      // 2. 其他递归
+      p('Reverse String', '反转字符串', 'Easy', 'reverse-string', 1),
+      p('Fibonacci Number', '斐波那契数', 'Easy', 'fibonacci-number', 1),
+      p("Pascal's Triangle II", '杨辉三角 II', 'Easy', 'pascals-triangle-ii', 1),
+      p('Pow(x, n)', 'Pow(x, n)', 'Medium', 'powx-n', 3),
+      p('Climbing Stairs', '爬楼梯', 'Easy', 'climbing-stairs', 3),
+      p('Maximum Depth of Binary Tree', '二叉树的最大深度', 'Easy', 'maximum-depth-of-binary-tree', 3),
+      p('Unique Binary Search Trees II', '不同的二叉搜索树 II', 'Medium', 'unique-binary-search-trees-ii', 2),
+      p('K-th Symbol in Grammar', '第 K 个语法符号', 'Medium', 'k-th-symbol-in-grammar', 2),
     ],
   },
   {
@@ -484,12 +504,27 @@ export const NODES = [
 
   // 二叉树 → 两种遍历
   {
+    // 深刻理解「遍历」和「分解问题」两种递归思维模式,将代码准确地写到前中后序位置,是写对递归算法的关键。
+    // 「遍历」是 DFS/回溯算法的原型,「分解问题」是动态规划/分治算法的原型。
     id: 'recursivetraversal', kind: 'milestone', theme: 'peach', zh: '递归遍历', en: 'Recursive Traversal',
+    tutorials: [
+      { zh: '二叉树心法(思路篇)', en: 'Binary Tree in Action (Traversal)', url: 'https://labuladong.online/zh/algo/data-structure/binary-tree-part1/' },
+      { zh: '二叉树心法(构造篇)', en: 'Binary Tree in Action (Construction)', url: 'https://labuladong.online/zh/algo/data-structure/binary-tree-part2/' },
+      { zh: '二叉树心法(序列化篇)', en: 'Binary Tree in Action (Serialization)', url: 'https://labuladong.online/zh/algo/data-structure/serialize-and-deserialize-binary-tree/' },
+      { zh: '拓展:最近公共祖先系列解题框架', en: 'Lowest Common Ancestor All in One', url: 'https://labuladong.online/zh/algo/practice-in-action/lowest-common-ancestor-summary/' },
+      { zh: '一个视角 + 两种思维模式搞定递归', en: 'One Perspective + Two Thinking Modes for Recursion', url: 'https://labuladong.online/zh/algo/essential-technique/understand-recursion/' },
+    ],
+    problemGroups: [
+      { zh: '运用「遍历」思维解题', en: 'Solve with "Traversal" Thinking', count: 4 },
+      { zh: '运用「分解问题」思维解题', en: 'Solve with "Decompose Problem" Thinking', count: 2 },
+    ],
     problems: [
+      // 1. 运用「遍历」思维解题
       p('Binary Tree Paths', '二叉树的所有路径(遍历)', 'Easy', 'binary-tree-paths'),
       p('Sum Root to Leaf Numbers', '求根节点到叶节点数字之和(遍历)', 'Medium', 'sum-root-to-leaf-numbers'),
       p('Binary Tree Right Side View', '二叉树的右视图(遍历)', 'Medium', 'binary-tree-right-side-view'),
       p('Sum of Root To Leaf Binary Numbers', '从根到叶的二进制数之和(遍历)', 'Easy', 'sum-of-root-to-leaf-binary-numbers'),
+      // 2. 运用「分解问题」思维解题
       p('Construct Binary Tree from Preorder and Inorder Traversal', '从前序与中序遍历构造二叉树(分解)', 'Medium', 'construct-binary-tree-from-preorder-and-inorder-traversal'),
       p('Construct Binary Tree from Inorder and Postorder Traversal', '从中序与后序遍历构造二叉树(分解)', 'Medium', 'construct-binary-tree-from-inorder-and-postorder-traversal'),
     ],

@@ -169,14 +169,36 @@ export const NODES = [
   // 分组:双指针技巧
   { id: 'twopointer', kind: 'group', theme: 'sky', zh: '双指针技巧', en: 'Two Pointers', cols: 1 },
   {
-    id: 'arr2p', kind: 'topic', group: 'twopointer', zh: '数组双指针', en: 'Array Two Pointers',
+    // 题目按套路分成 2 个小组,只在这个板块自己的窗口里当小标题展示,不额外占路线图节点。
+    // 详细笔记写在 tutorials 里的 Notion 链接,这个模块的题暂时不用逐题加笔记。
+    id: 'arr2p', kind: 'topic', group: 'twopointer', zh: '双指针', en: 'Two Pointers',
+    tutorials: [
+      { zh: '双指针技巧笔记', en: 'Two Pointers Notes', url: 'https://app.notion.com/p/Two-Pointers-23a191764d5181a6b8f9f0d8998049dd?source=copy_link' },
+    ],
+    problemGroups: [
+      { zh: '快慢指针', en: 'Fast & Slow Pointers', count: 7 },
+      { zh: '左右指针', en: 'Left & Right Pointers', count: 10 },
+    ],
     problems: [
+      // 1. 快慢指针
+      p('Remove Duplicates from Sorted Array', '删除有序数组中的重复项', 'Easy', 'remove-duplicates-from-sorted-array'),
+      p('Remove Element', '移除元素', 'Easy', 'remove-element'),
       p('Remove Duplicates from Sorted Array II', '删除有序数组中的重复项 II', 'Medium', 'remove-duplicates-from-sorted-array-ii'),
-      p('Valid Palindrome', '验证回文串', 'Easy', 'valid-palindrome'),
-      p('Sort Colors', '颜色分类', 'Medium', 'sort-colors'),
+      p('Remove Duplicates from Sorted List', '删除排序链表中的重复元素', 'Easy', 'remove-duplicates-from-sorted-list'),
+      p('Move Zeroes', '移动零', 'Easy', 'move-zeroes'),
+      p('Merge Strings Alternately', '交替合并字符串', 'Easy', 'merge-strings-alternately'),
       p('Merge Sorted Array', '合并两个有序数组', 'Easy', 'merge-sorted-array'),
-      p('Squares of a Sorted Array', '有序数组的平方', 'Easy', 'squares-of-a-sorted-array'),
-      p('Sort the Matrix Diagonally', '将矩阵按对角线排序', 'Medium', 'sort-the-matrix-diagonally'),
+      // 2. 左右指针
+      p('Two Sum II - Input Array Is Sorted', '两数之和 II - 输入有序数组', 'Medium', 'two-sum-ii-input-array-is-sorted'),
+      p('3Sum', '三数之和', 'Medium', '3sum'),
+      p('4Sum', '四数之和', 'Medium', '4sum'),
+      p('Reverse String', '反转字符串', 'Easy', 'reverse-string'),
+      p('Valid Palindrome', '验证回文串', 'Easy', 'valid-palindrome'),
+      p('Valid Palindrome II', '验证回文串 II', 'Easy', 'valid-palindrome-ii'),
+      p('Rotate Array', '轮转数组', 'Medium', 'rotate-array'),
+      p('Container With Most Water', '盛最多水的容器', 'Medium', 'container-with-most-water'),
+      p('Boats to Save People', '救生艇', 'Medium', 'boats-to-save-people'),
+      p('Trapping Rain Water', '接雨水', 'Hard', 'trapping-rain-water'),
     ],
   },
   {
@@ -363,16 +385,6 @@ export const NODES = [
       p('Remove Nth Node From End of List', '删除链表的倒数第 N 个结点', 'Medium', 'remove-nth-node-from-end-of-list', 3),
       // 4. 特殊链表与深拷贝
       p('Copy List with Random Pointer', '随机链表的复制', 'Medium', 'copy-list-with-random-pointer', 3),
-    ],
-  },
-  {
-    id: 'fastslow', kind: 'milestone', theme: 'pink', zh: '快慢指针', en: 'Fast & Slow Pointers',
-    problems: [
-      p('Linked List Cycle', '环形链表', 'Easy', 'linked-list-cycle'),
-      p('Linked List Cycle II', '环形链表 II', 'Medium', 'linked-list-cycle-ii'),
-      p('Middle of the Linked List', '链表的中间结点', 'Easy', 'middle-of-the-linked-list'),
-      p('Happy Number', '快乐数', 'Easy', 'happy-number'),
-      p('Find the Duplicate Number', '寻找重复数', 'Medium', 'find-the-duplicate-number'),
     ],
   },
   {
@@ -710,7 +722,6 @@ export const EDGES = [
   ['arrayops', 'twopointer'],
   ['arrayops', 'basicds'],
   ['linkedlist', 'basicds'],
-  ['linkedlist', 'fastslow'],
   ['linkedlist', 'lltwopointer'],
   ['lltwopointer', 'recursion'],
   ['recursion', 'binarytree'],

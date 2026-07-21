@@ -592,9 +592,12 @@
   font-size: 13px;
   padding: 3px 5px;
   border-radius: 6px;
-  opacity: 0.35;
+  opacity: 0;
   filter: grayscale(1);
   transition: opacity 0.15s, background 0.15s, filter 0.15s;
+}
+.problem-row:hover .note-btn {
+  opacity: 0.35;
 }
 .note-btn:hover {
   background: #eef1f4;

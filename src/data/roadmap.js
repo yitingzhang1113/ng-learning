@@ -548,6 +548,7 @@ export const NODES = [
       p('Binary Tree Level Order Traversal II', '二叉树的层序遍历 II', 'Medium', 'binary-tree-level-order-traversal-ii'),
       p('Average of Levels in Binary Tree', '二叉树的层平均值', 'Easy', 'average-of-levels-in-binary-tree'),
       p('Find Largest Value in Each Tree Row', '在每个树行中找最大值', 'Medium', 'find-largest-value-in-each-tree-row'),
+      p('All Nodes Distance K in Binary Tree', '二叉树中所有距离为 K 的结点', 'Medium', 'all-nodes-distance-k-in-binary-tree', 3),
     ],
   },
 
@@ -629,17 +630,20 @@ export const NODES = [
     // 题目按套路分成 2 个小组,只在这个板块自己的窗口里当小标题展示,不额外占路线图节点。
     id: 'bfs', kind: 'milestone', theme: 'aqua', zh: '广度优先搜索', en: 'BFS',
     problemGroups: [
-      { zh: '单源 BFS:分层遍历与无权最短路', en: 'Single-source BFS: Layered Traversal & Unweighted Shortest Path', count: 6 },
+      { zh: '单源 BFS:分层遍历与无权最短路', en: 'Single-source BFS: Layered Traversal & Unweighted Shortest Path', count: 9 },
       { zh: '多源 BFS:同步扩散与最近距离', en: 'Multi-source BFS: Simultaneous Spread & Nearest Distance', count: 5 },
     ],
     problems: [
       // 1. 单源 BFS
-      p('All Nodes Distance K in Binary Tree', '二叉树中所有距离为 K 的结点', 'Medium', 'all-nodes-distance-k-in-binary-tree', 3),
       p('Shortest Path in Binary Matrix', '二进制矩阵中的最短路径', 'Medium', 'shortest-path-in-binary-matrix', 3),
       p('Open the Lock', '打开转盘锁', 'Medium', 'open-the-lock', 3),
       p('Word Ladder', '单词接龙', 'Hard', 'word-ladder', 3),
       p('Keys and Rooms', '钥匙和房间', 'Medium', 'keys-and-rooms', 1),
       p('Nearest Exit from Entrance in Maze', '迷宫中离入口最近的出口', 'Medium', 'nearest-exit-from-entrance-in-maze', 1),
+      p('Snakes and Ladders', '蛇梯棋', 'Medium', 'snakes-and-ladders', 3),
+      p('Sliding Puzzle', '滑动谜题', 'Hard', 'sliding-puzzle', 3),
+      p('Shortest Path with Alternating Colors', '交替最短路径', 'Medium', 'shortest-path-with-alternating-colors', 3),
+      p('Shortest Distance After Road Addition Queries I', '道路加入查询后的最短距离 I', 'Medium', 'shortest-distance-after-road-addition-queries-i', 2),
       // 2. 多源 BFS
       lock(p('Walls and Gates', '墙与门', 'Medium', 'walls-and-gates', 3)),
       p('Rotting Oranges', '腐烂的橘子', 'Medium', 'rotting-oranges', 3),

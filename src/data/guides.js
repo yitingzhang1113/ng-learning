@@ -132,6 +132,7 @@ export const GUIDES = {
   sliding: {
     tutorials: [
       { zh: '滑动窗口算法核心代码模板', en: 'Sliding Window Framework', url: 'https://labuladong.online/zh/algo/essential-technique/sliding-window-framework-2/' },
+      { zh: '滑动窗口笔记', en: 'Sliding Window Notes', url: 'https://app.notion.com/p/23a191764d5181e48889c53d0367ef60?source=copy_link' },
     ],
     templates: [
       {
@@ -161,6 +162,7 @@ export const GUIDES = {
     tutorials: [
       { zh: '二分搜索算法核心代码模板', en: 'Binary Search Framework', url: 'https://labuladong.online/zh/algo/essential-technique/binary-search-framework/' },
       { zh: '实际运用二分搜索时的思维框架', en: 'Binary Search in Action', url: 'https://labuladong.online/zh/algo/frequency-interview/binary-search-in-action/' },
+      { zh: '二分查找笔记', en: 'Binary Search Notes', url: 'https://app.notion.com/p/23a191764d5181c08df0cf19aa4b3963?source=copy_link' },
     ],
     templates: [
       {
@@ -980,6 +982,7 @@ def coinChange2(coins: List[int], amount: int) -> int:
   bfs: {
     tutorials: [
       { zh: 'BFS 算法解题套路框架', en: 'BFS Framework', url: 'https://labuladong.online/zh/algo/essential-technique/bfs-framework/' },
+      { zh: 'BFS 笔记', en: 'BFS Notes', url: 'https://app.notion.com/p/BFS-3aa191764d5180379e10ef58ac55edff?source=copy_link' },
     ],
     templates: [
       {

@@ -555,19 +555,54 @@ export const NODES = [
   // 分组:遍历视角
   { id: 'traversalview', kind: 'group', theme: 'cream', zh: '遍历视角', en: 'Traverse View', cols: 1 },
   {
+    // 题目按套路分成 3 大类 10 小组,只在这个板块自己的窗口里当小标题展示,不额外占路线图节点。
     id: 'backtrack', kind: 'topic', group: 'traversalview', zh: '回溯算法', en: 'Backtracking',
+    problemGroups: [
+      { zh: '1.1 子集 / 子序列型', en: '1.1 Subsets & Subsequences', count: 3 },
+      { zh: '1.2 组合型', en: '1.2 Combinations', count: 4 },
+      { zh: '1.3 排列型', en: '1.3 Permutations', count: 2 },
+      { zh: '2.1 固定位置构造', en: '2.1 Fixed-position Construction', count: 2 },
+      { zh: '2.2 字符串切割', en: '2.2 String Partitioning', count: 3 },
+      { zh: '2.3 约束满足', en: '2.3 Constraint Satisfaction', count: 2 },
+      { zh: '2.4 特殊 / 表达式构造', en: '2.4 Special & Expression Construction', count: 3 },
+      { zh: '3.1 网格路径', en: '3.1 Grid Paths', count: 2 },
+      { zh: '3.2 图路径', en: '3.2 Graph Paths', count: 1 },
+      { zh: '3.3 全覆盖路径', en: '3.3 Full-coverage Paths', count: 1 },
+    ],
     problems: [
+      // 1.1 子集 / 子序列型
       p('Subsets', '子集', 'Medium', 'subsets'),
-      p('Permutations', '全排列', 'Medium', 'permutations'),
+      p('Subsets II', '子集 II', 'Medium', 'subsets-ii'),
+      p('Non-decreasing Subsequences', '非递减子序列', 'Medium', 'non-decreasing-subsequences'),
+      // 1.2 组合型
       p('Combinations', '组合', 'Medium', 'combinations'),
       p('Combination Sum', '组合总和', 'Medium', 'combination-sum'),
+      p('Combination Sum II', '组合总和 II', 'Medium', 'combination-sum-ii'),
+      p('Combination Sum III', '组合总和 III', 'Medium', 'combination-sum-iii'),
+      // 1.3 排列型
+      p('Permutations', '全排列', 'Medium', 'permutations'),
+      p('Permutations II', '全排列 II', 'Medium', 'permutations-ii'),
+      // 2.1 固定位置构造
+      p('Letter Combinations of a Phone Number', '电话号码的字母组合', 'Medium', 'letter-combinations-of-a-phone-number'),
       p('Generate Parentheses', '括号生成', 'Medium', 'generate-parentheses'),
-      p('Non-decreasing Subsequences', '非递减子序列', 'Medium', 'non-decreasing-subsequences'),
-      p('Unique Paths III', '不同路径 III', 'Hard', 'unique-paths-iii'),
+      // 2.2 字符串切割
       p('Palindrome Partitioning', '分割回文串', 'Medium', 'palindrome-partitioning'),
       p('Restore IP Addresses', '复原 IP 地址', 'Medium', 'restore-ip-addresses'),
-      p('Letter Combinations of a Phone Number', '电话号码的字母组合', 'Medium', 'letter-combinations-of-a-phone-number'),
+      p('Word Break II', '单词拆分 II', 'Hard', 'word-break-ii'),
+      // 2.3 约束满足
+      p('N-Queens', 'N 皇后', 'Hard', 'n-queens'),
+      p('Sudoku Solver', '解数独', 'Hard', 'sudoku-solver'),
+      // 2.4 特殊 / 表达式构造
+      p('Expression Add Operators', '给表达式添加运算符', 'Hard', 'expression-add-operators'),
+      p('Split Array into Fibonacci Sequence', '将数组拆分成斐波那契序列', 'Medium', 'split-array-into-fibonacci-sequence'),
+      p('Additive Number', '累加数', 'Medium', 'additive-number'),
+      // 3.1 网格路径
       p('Word Search', '单词搜索', 'Medium', 'word-search'),
+      p('Path with Maximum Gold', '黄金矿工', 'Medium', 'path-with-maximum-gold'),
+      // 3.2 图路径
+      p('All Paths From Source to Target', '所有可能的路径', 'Medium', 'all-paths-from-source-to-target'),
+      // 3.3 全覆盖路径
+      p('Unique Paths III', '不同路径 III', 'Hard', 'unique-paths-iii'),
     ],
   },
   {

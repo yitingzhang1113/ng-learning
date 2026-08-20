@@ -824,6 +824,8 @@ def topoSort(numCourses: int, prerequisites: List[List[int]]) -> List[int]:
   backtrack: {
     tutorials: [
       { zh: '回溯算法解题套路框架', en: 'Backtracking Framework', url: 'https://labuladong.online/zh/algo/essential-technique/backtrack-framework/' },
+      { zh: '回溯算法笔记', en: 'Backtracking Notes', url: 'https://app.notion.com/p/30c191764d5180a19c99d0bbebab1ca6?source=copy_link' },
+      { zh: 'N 叉树遍历基础', en: 'N-ary Tree Traversal Basics', url: 'https://labuladong.online/zh/algo/data-structure-basic/n-ary-tree-traverse-basic/' },
     ],
     templates: [
       {

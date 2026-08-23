@@ -844,6 +844,21 @@ def backtrack(路径, 选择列表):
         路径.pop()`,
       },
       {
+        zh: '1.1 子集/子序列型:做选择与撤销选择', en: '1.1 Subsets & Subsequences: Choose & Unchoose',
+        code: `# path 是所有分支共用的同一个列表(一个"盘子")
+# append 是往下走时把选择放进盘子,pop 是往回退时把它拿回来
+# 不拿回来,下一条路就会端着上一条路的选择继续走
+def backtrack(start: int, path: List[int]) -> None:
+    res.append(path[:])              # 收集答案:拷贝一份存进 res
+    for i in range(start, len(nums)):
+        path.append(nums[i])         # 做选择
+        backtrack(i + 1, path)       # 往下走
+        path.pop()                   # 撤销选择,恢复成进入这层时的样子
+
+res, nums = [], [1, 2, 3]
+backtrack(0, [])`,
+      },
+      {
         zh: '子集 / 组合 / 排列(元素无重不可复选)', en: 'Subsets / Combinations / Permutations',
         code: `# 子集(组合):用 start 控制,不走回头路
 def subsets(nums: List[int]) -> List[List[int]]:

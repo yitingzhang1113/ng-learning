@@ -556,15 +556,19 @@ export const NODES = [
   { id: 'traversalview', kind: 'group', theme: 'cream', zh: '遍历视角', en: 'Traverse View', cols: 1 },
   {
     // 题目按套路分成 3 大类 10 小组,只在这个板块自己的窗口里当小标题展示,不额外占路线图节点。
+    // 大类标题(count: 0, major: true)只是插入一条更醒目的分隔标题,不消耗题目。
     id: 'backtrack', kind: 'topic', group: 'traversalview', zh: '回溯算法', en: 'Backtracking',
     problemGroups: [
+      { zh: '1. 选择型', en: '1. Selection', count: 0, major: true },
       { zh: '1.1 子集 / 子序列型', en: '1.1 Subsets & Subsequences', count: 3 },
       { zh: '1.2 组合型', en: '1.2 Combinations', count: 4 },
       { zh: '1.3 排列型', en: '1.3 Permutations', count: 2 },
+      { zh: '2. 构造型', en: '2. Construction', count: 0, major: true },
       { zh: '2.1 固定位置构造', en: '2.1 Fixed-position Construction', count: 2 },
       { zh: '2.2 字符串切割', en: '2.2 String Partitioning', count: 3 },
       { zh: '2.3 约束满足', en: '2.3 Constraint Satisfaction', count: 2 },
       { zh: '2.4 特殊 / 表达式构造', en: '2.4 Special & Expression Construction', count: 3 },
+      { zh: '3. 路径型', en: '3. Path', count: 0, major: true },
       { zh: '3.1 网格路径', en: '3.1 Grid Paths', count: 2 },
       { zh: '3.2 图路径', en: '3.2 Graph Paths', count: 1 },
       { zh: '3.3 全覆盖路径', en: '3.3 Full-coverage Paths', count: 1 },

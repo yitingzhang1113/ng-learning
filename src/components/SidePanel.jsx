@@ -146,7 +146,7 @@ export default function SidePanel({
   if (node.problemGroups) {
     let offset = 0
     node.problemGroups.forEach((g) => {
-      groupAt[offset] = g
+      ;(groupAt[offset] ||= []).push(g)
       offset += g.count
     })
   }
@@ -312,14 +312,14 @@ export default function SidePanel({
                   <span className="pt-zh">{pick2(lang, pr)}</span>
                 </>
               )
-              const groupHead = !custom && groupAt[idx]
+              const groupHeads = !custom && groupAt[idx]
               return (
                 <Fragment key={key}>
-                  {groupHead && (
-                    <li className="problem-group-head">
-                      <span>{pick(lang, groupHead)}</span>
+                  {groupHeads && groupHeads.map((g, gi) => (
+                    <li key={gi} className={`problem-group-head${g.major ? ' major' : ''}`}>
+                      <span>{pick(lang, g)}</span>
                     </li>
-                  )}
+                  ))}
                   <li className={`${cls}${open ? ' open' : ''}`}>
                   <div className="problem-row">
                     <button

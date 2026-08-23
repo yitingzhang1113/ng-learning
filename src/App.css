@@ -327,6 +327,20 @@
 }
 .problem-list li.problem-group-head:hover { background: none; }
 .problem-list li.problem-group-head:first-child { padding-top: 4px; }
+/* 大类标题(如「1. 选择型」):比小组标题更醒目,和后面的小组拉开区分 */
+.problem-list li.problem-group-head.major {
+  padding: 18px 6px 6px;
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text);
+  border-top: 1px solid var(--border);
+}
+.problem-list li.problem-group-head.major:first-child {
+  margin-top: 0;
+  padding-top: 4px;
+  border-top: none;
+}
 .hot-star {
   color: #e6a23c;
   font-size: 11px;

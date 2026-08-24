@@ -284,6 +284,36 @@ export default function SidePanel({
           </div>
         )}
 
+        {/* 可交互笔记(节点带 embeds 字段时,内嵌 iframe 展示) */}
+        {node.embeds?.length > 0 && (
+          <div className="embed-box">
+            <div className="tut-label">🧩 {t('interactiveNotes')}</div>
+            {node.embeds.map((em, i) => (
+              <div className="embed-item" key={i}>
+                <div className="embed-head">
+                  <span className="embed-title">{pick(lang, em)}</span>
+                  <a
+                    className="embed-open"
+                    href={`${import.meta.env.BASE_URL}${em.src}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    title={t('openFull')}
+                  >
+                    ↗
+                  </a>
+                </div>
+                <div className="embed-frame" style={{ height: em.height || 640 }}>
+                  <iframe
+                    src={`${import.meta.env.BASE_URL}${em.src}`}
+                    title={pick(lang, em)}
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {merged.length === 0 && !node.tutorials?.length && !node.templates?.length && (
           <p className="side-empty">{t('emptyNode')}</p>
         )}

@@ -827,6 +827,13 @@ def topoSort(numCourses: int, prerequisites: List[List[int]]) -> List[int]:
       { zh: '回溯算法笔记', en: 'Backtracking Notes', url: 'https://app.notion.com/p/30c191764d5180a19c99d0bbebab1ca6?source=copy_link' },
       { zh: 'N 叉树遍历基础', en: 'N-ary Tree Traversal Basics', url: 'https://labuladong.online/zh/algo/data-structure-basic/n-ary-tree-traverse-basic/' },
     ],
+    // 可交互笔记(内嵌 iframe,静态页放在 public/embeds/ 下)。src 相对站点 base 路径。
+    embeds: [
+      {
+        zh: '1. 选择型 · 回溯递归树实验室', en: '1. Selection · Backtracking Tree Lab',
+        src: 'embeds/backtracking-selection-lab.html', height: 820,
+      },
+    ],
     templates: [
       {
         zh: '回溯算法框架', en: 'Backtracking Framework',

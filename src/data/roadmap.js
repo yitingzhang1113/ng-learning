@@ -754,6 +754,7 @@ NODES.forEach((n) => {
   if (!g) return
   if (!n.tutorials && g.tutorials) n.tutorials = g.tutorials
   if (!n.templates && g.templates) n.templates = g.templates
+  if (!n.embeds && g.embeds) n.embeds = g.embeds
 })
 
 // 连线:[from, to] 或 [from, to, 'dashed']。只连 milestone / group。

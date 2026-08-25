@@ -57,6 +57,7 @@ export default function SidePanel({
 }) {
   const { lang, t } = useLang()
   const [openNotes, setOpenNotes] = useState(() => new Set())
+  const [openEmbeds, setOpenEmbeds] = useState(() => new Set())
 
   // 「添加题目」表单状态
   const [pEn, setPEn] = useState('')
@@ -67,6 +68,7 @@ export default function SidePanel({
   const [showAdd, setShowAdd] = useState(false)
   useEffect(() => {
     setPEn(''); setPZh(''); setPUrl(''); setPDiff('Medium'); setDeletingKey(null); setShowAdd(false)
+    setOpenEmbeds(new Set())
   }, [node?.id])
 
   // 形态:dock 停靠右侧(左缘可拖宽) / center 居中大窗(右下角可缩放)
@@ -288,10 +290,24 @@ export default function SidePanel({
         {node.embeds?.length > 0 && (
           <div className="embed-box">
             <div className="tut-label">🧩 {t('interactiveNotes')}</div>
-            {node.embeds.map((em, i) => (
-              <div className="embed-item" key={i}>
+            {node.embeds.map((em, i) => {
+              const emOpen = openEmbeds.has(i)
+              return (
+              <div className={`embed-item${emOpen ? ' is-open' : ''}`} key={i}>
                 <div className="embed-head">
-                  <span className="embed-title">{pick(lang, em)}</span>
+                  <button
+                    type="button"
+                    className="embed-title embed-toggle"
+                    aria-expanded={emOpen}
+                    onClick={() => setOpenEmbeds((prev) => {
+                      const next = new Set(prev)
+                      next.has(i) ? next.delete(i) : next.add(i)
+                      return next
+                    })}
+                  >
+                    <span className="embed-caret">{emOpen ? '▾' : '▸'}</span>
+                    {pick(lang, em)}
+                  </button>
                   <a
                     className="embed-open"
                     href={`${import.meta.env.BASE_URL}${em.src}`}
@@ -302,15 +318,18 @@ export default function SidePanel({
                     ↗
                   </a>
                 </div>
-                <div className="embed-frame" style={{ height: em.height || 640 }}>
-                  <iframe
-                    src={`${import.meta.env.BASE_URL}${em.src}`}
-                    title={pick(lang, em)}
-                    loading="lazy"
-                  />
-                </div>
+                {emOpen && (
+                  <div className="embed-frame" style={{ height: em.height || 640 }}>
+                    <iframe
+                      src={`${import.meta.env.BASE_URL}${em.src}`}
+                      title={pick(lang, em)}
+                      loading="lazy"
+                    />
+                  </div>
+                )}
               </div>
-            ))}
+              )
+            })}
           </div>
         )}
 

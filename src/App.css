@@ -1325,6 +1325,8 @@
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
+}
+.embed-item.is-open .embed-head {
   border-bottom: 1px solid #bee7e3;
 }
 .embed-title {
@@ -1333,6 +1335,26 @@
   font-weight: 600;
   color: #2f968e;
   min-width: 0;
+}
+.embed-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: none;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+}
+.embed-toggle:hover {
+  color: #2f968e;
+  text-decoration: underline;
+}
+.embed-caret {
+  flex: 0 0 auto;
+  font-size: 10px;
+  color: #54bdb4;
 }
 .embed-open {
   flex: 0 0 auto;

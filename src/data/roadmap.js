@@ -613,23 +613,28 @@ export const NODES = [
     // 题目按套路分成 2 个小组,只在这个板块自己的窗口里当小标题展示,不额外占路线图节点。
     id: 'dfs', kind: 'topic', group: 'traversalview', zh: '深度优先搜索', en: 'DFS',
     problemGroups: [
-      { zh: '网格 DFS:岛屿、边界与连通区域', en: 'Grid DFS: Islands, Borders & Connected Regions', count: 9 },
-      { zh: '图 DFS:遍历、复制与路径搜索', en: 'Graph DFS: Traversal, Cloning & Path Search', count: 2 },
+      { zh: '岛屿问题', en: 'Island Problems', count: 11 },
+      { zh: '网格搜索', en: 'Grid Search', count: 5 },
     ],
     problems: [
-      // 1. 网格 DFS
+      // 1. 岛屿问题
       p('Number of Islands', '岛屿数量', 'Medium', 'number-of-islands', 3),
       p('Max Area of Island', '岛屿的最大面积', 'Medium', 'max-area-of-island', 3),
       p('Island Perimeter', '岛屿的周长', 'Easy', 'island-perimeter', 2),
-      p('Surrounded Regions', '被围绕的区域', 'Medium', 'surrounded-regions', 3),
-      p('Pacific Atlantic Water Flow', '太平洋大西洋水流问题', 'Medium', 'pacific-atlantic-water-flow', 3),
       p('Number of Closed Islands', '统计封闭岛屿的数目', 'Medium', 'number-of-closed-islands', 2),
       p('Number of Enclaves', '飞地的数量', 'Medium', 'number-of-enclaves', 2),
-      p('Count Sub Islands', '统计子岛屿', 'Medium', 'count-sub-islands', 2),
-      lock(p('Number of Distinct Islands', '不同岛屿的数量', 'Medium', 'number-of-distinct-islands', 2)),
-      // 2. 图 DFS
-      p('Clone Graph', '克隆图', 'Medium', 'clone-graph', 3),
-      p('Evaluate Division', '除法求值', 'Medium', 'evaluate-division', 3),
+      p('Count Sub Islands', '统计子岛屿', 'Medium', 'count-sub-islands', 3),
+      p('Maximum Number of Fish in a Grid', '网格中的最大鱼数', 'Medium', 'maximum-number-of-fish-in-a-grid', 2),
+      lock(p('Number of Distinct Islands', '不同岛屿的数量', 'Medium', 'number-of-distinct-islands', 3)),
+      p('Shortest Bridge', '最短的桥', 'Medium', 'shortest-bridge', 3),
+      p('Making A Large Island', '最大人工岛', 'Hard', 'making-a-large-island', 4),
+      p('Minimum Number of Days to Disconnect Island', '断开岛屿的最少天数', 'Hard', 'minimum-number-of-days-to-disconnect-island', 4),
+      // 2. 网格搜索
+      p('Flood Fill', '图像渲染', 'Easy', 'flood-fill', 2),
+      p('Surrounded Regions', '被围绕的区域', 'Medium', 'surrounded-regions', 3),
+      p('Pacific Atlantic Water Flow', '太平洋大西洋水流问题', 'Medium', 'pacific-atlantic-water-flow', 3),
+      p('Regions Cut By Slashes', '由斜杠划分区域', 'Medium', 'regions-cut-by-slashes', 3),
+      p('Minesweeper', '扫雷游戏', 'Medium', 'minesweeper', 2),
     ],
   },
 

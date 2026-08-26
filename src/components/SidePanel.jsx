@@ -40,6 +40,36 @@ function TemplateBlock({ tp }) {
   )
 }
 
+// 可交互笔记块:默认折叠成一个标题链接,点击展开内嵌 iframe;右侧 ↗ 新标签页打开完整页。
+function EmbedItem({ em }) {
+  const { lang, t } = useLang()
+  const [open, setOpen] = useState(false)
+  const href = `${import.meta.env.BASE_URL}${em.src}`
+  return (
+    <div className={`embed-item${open ? ' is-open' : ''}`}>
+      <div className="embed-head">
+        <button
+          type="button"
+          className="embed-title embed-toggle"
+          aria-expanded={open}
+          onClick={() => setOpen((o) => !o)}
+        >
+          <span className="embed-caret">{open ? '▾' : '▸'}</span>
+          {pick(lang, em)}
+        </button>
+        <a className="embed-open" href={href} target="_blank" rel="noreferrer" title={t('openFull')}>
+          ↗
+        </a>
+      </div>
+      {open && (
+        <div className="embed-frame" style={{ height: em.height || 640 }}>
+          <iframe src={href} title={pick(lang, em)} loading="lazy" />
+        </div>
+      )}
+    </div>
+  )
+}
+
 // 点击节点后从右侧滑出:该板块题目(三态打卡 + 中英文 + 美区外链 + 每题笔记)+ 板块笔记。
 export default function SidePanel({
   node,
@@ -57,7 +87,6 @@ export default function SidePanel({
 }) {
   const { lang, t } = useLang()
   const [openNotes, setOpenNotes] = useState(() => new Set())
-  const [openEmbeds, setOpenEmbeds] = useState(() => new Set())
 
   // 「添加题目」表单状态
   const [pEn, setPEn] = useState('')
@@ -68,7 +97,6 @@ export default function SidePanel({
   const [showAdd, setShowAdd] = useState(false)
   useEffect(() => {
     setPEn(''); setPZh(''); setPUrl(''); setPDiff('Medium'); setDeletingKey(null); setShowAdd(false)
-    setOpenEmbeds(new Set())
   }, [node?.id])
 
   // 形态:dock 停靠右侧(左缘可拖宽) / center 居中大窗(右下角可缩放)
@@ -290,46 +318,9 @@ export default function SidePanel({
         {node.embeds?.length > 0 && (
           <div className="embed-box">
             <div className="tut-label">🧩 {t('interactiveNotes')}</div>
-            {node.embeds.map((em, i) => {
-              const emOpen = openEmbeds.has(i)
-              return (
-              <div className={`embed-item${emOpen ? ' is-open' : ''}`} key={i}>
-                <div className="embed-head">
-                  <button
-                    type="button"
-                    className="embed-title embed-toggle"
-                    aria-expanded={emOpen}
-                    onClick={() => setOpenEmbeds((prev) => {
-                      const next = new Set(prev)
-                      next.has(i) ? next.delete(i) : next.add(i)
-                      return next
-                    })}
-                  >
-                    <span className="embed-caret">{emOpen ? '▾' : '▸'}</span>
-                    {pick(lang, em)}
-                  </button>
-                  <a
-                    className="embed-open"
-                    href={`${import.meta.env.BASE_URL}${em.src}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    title={t('openFull')}
-                  >
-                    ↗
-                  </a>
-                </div>
-                {emOpen && (
-                  <div className="embed-frame" style={{ height: em.height || 640 }}>
-                    <iframe
-                      src={`${import.meta.env.BASE_URL}${em.src}`}
-                      title={pick(lang, em)}
-                      loading="lazy"
-                    />
-                  </div>
-                )}
-              </div>
-              )
-            })}
+            {node.embeds.map((em, i) => (
+              <EmbedItem em={em} key={i} />
+            ))}
           </div>
         )}
 
@@ -344,7 +335,7 @@ export default function SidePanel({
               const st = status[key]
               const cls = STATUS_CLS[st] || 'st-none'
               const diff = DIFF[pr.diff] || {}
-              const hasNote = noteFilled(problemNotes[key])
+              const hasNote = noteFilled(problemNotes[key]) || !!pr.embed
               const open = openNotes.has(key)
               const title = (
                 <>
@@ -407,6 +398,11 @@ export default function SidePanel({
                   </div>
                   {open && (
                     <div className="problem-note">
+                      {pr.embed && (
+                        <div className="embed-box embed-box--note">
+                          <EmbedItem em={pr.embed} />
+                        </div>
+                      )}
                       <ProblemNoteEditor
                         value={problemNotes[key]}
                         onChange={(val) => onProblemNote(node.id, idx, val)}

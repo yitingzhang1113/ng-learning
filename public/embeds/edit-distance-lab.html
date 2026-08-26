@@ -1,0 +1,1126 @@
+<title>编辑距离演算台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap">
+
+<style>
+:root{
+  --paper:#EDEFF3;
+  --surface:#FFFFFF;
+  --surface-2:#F5F7FA;
+  --ink:#141922;
+  --ink-2:#5C6673;
+  --ink-3:#8791A0;
+  --rule:#D2D8E0;
+  --rule-soft:#E3E7EC;
+  --accent:#23388F;
+  --accent-soft:#DDE3F7;
+  --on-accent:#FFFFFF;
+  --c-match:#0E7A62;   --c-match-bg:#D8F0E8;
+  --c-replace:#A8620A; --c-replace-bg:#F8E9CE;
+  --c-delete:#BB2F4C;  --c-delete-bg:#FBDDE2;
+  --c-insert:#4B3FC4;  --c-insert-bg:#E2DFF9;
+  --c-hit:#6A7280;     --c-hit-bg:#E8EBEF;
+  --shadow:0 1px 2px rgba(20,25,34,.06), 0 8px 24px -12px rgba(20,25,34,.18);
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --serif:"Noto Serif SC",Songti SC,SimSun,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0F1319;
+    --surface:#181E26;
+    --surface-2:#1F2630;
+    --ink:#E4E9F0;
+    --ink-2:#8E9AA9;
+    --ink-3:#6A7482;
+    --rule:#2B333E;
+    --rule-soft:#232A34;
+    --accent:#8FAAFF;
+    --accent-soft:#1F2A47;
+    --on-accent:#0C1016;
+    --c-match:#42D6A6;   --c-match-bg:#0E2E27;
+    --c-replace:#E9A93E; --c-replace-bg:#332512;
+    --c-delete:#FF7189;  --c-delete-bg:#361720;
+    --c-insert:#9E90FF;  --c-insert-bg:#221F3D;
+    --c-hit:#7C8798;     --c-hit-bg:#222932;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0F1319;
+  --surface:#181E26;
+  --surface-2:#1F2630;
+  --ink:#E4E9F0;
+  --ink-2:#8E9AA9;
+  --ink-3:#6A7482;
+  --rule:#2B333E;
+  --rule-soft:#232A34;
+  --accent:#8FAAFF;
+  --accent-soft:#1F2A47;
+  --on-accent:#0C1016;
+  --c-match:#42D6A6;   --c-match-bg:#0E2E27;
+  --c-replace:#E9A93E; --c-replace-bg:#332512;
+  --c-delete:#FF7189;  --c-delete-bg:#361720;
+  --c-insert:#9E90FF;  --c-insert-bg:#221F3D;
+  --c-hit:#7C8798;     --c-hit-bg:#222932;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--paper);
+  background-image:
+    repeating-linear-gradient(to right, var(--rule-soft) 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(to bottom, var(--rule-soft) 0 1px, transparent 1px 28px);
+  color:var(--ink);
+  font-family:var(--sans);
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px 80px}
+
+/* ---------- header ---------- */
+header{padding:52px 0 28px}
+.eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink-3);display:flex;align-items:center;gap:10px;margin-bottom:14px;
+}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--rule)}
+h1{
+  font-family:var(--serif);font-weight:700;font-size:clamp(30px,5vw,46px);
+  line-height:1.2;margin:0 0 12px;text-wrap:balance;letter-spacing:.01em;
+}
+h1 .hl{color:var(--accent)}
+.lede{margin:0;max-width:62ch;color:var(--ink-2);font-size:15.5px}
+
+/* ---------- input console ---------- */
+.console{
+  margin-top:26px;background:var(--surface);border:1px solid var(--rule);border-radius:4px;
+  box-shadow:var(--shadow);padding:18px 20px;
+  display:flex;flex-wrap:wrap;gap:22px 30px;align-items:flex-end;
+}
+.field{display:flex;flex-direction:column;gap:7px}
+.field label{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.field input{
+  font-family:var(--mono);font-size:19px;font-weight:500;letter-spacing:.08em;
+  width:150px;padding:7px 11px;border:1px solid var(--rule);border-radius:3px;
+  background:var(--surface-2);color:var(--ink);
+}
+.field input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.arrowbox{font-family:var(--mono);font-size:20px;color:var(--ink-3);padding-bottom:9px}
+@media (max-width:540px){.arrowbox{display:none}.field input{width:100%}.field{flex:1 1 100%}}
+.presets{display:flex;flex-direction:column;gap:7px}
+.preset-row{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  font-family:var(--mono);font-size:12px;padding:5px 10px;border:1px solid var(--rule);
+  background:var(--surface-2);color:var(--ink-2);border-radius:999px;cursor:pointer;
+  transition:border-color .15s,color .15s;
+}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.answer{margin-left:auto;text-align:right}
+.answer .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);display:block}
+.answer .v{font-family:var(--mono);font-size:34px;font-weight:700;color:var(--accent);line-height:1.1;font-variant-numeric:tabular-nums}
+
+/* ---------- tabs ---------- */
+nav.tabs{display:flex;gap:2px;margin:34px 0 0;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.tab{
+  appearance:none;border:1px solid transparent;border-bottom:none;background:none;
+  padding:11px 18px;cursor:pointer;color:var(--ink-2);font-family:var(--sans);font-size:14.5px;
+  border-radius:4px 4px 0 0;position:relative;top:1px;display:flex;align-items:baseline;gap:9px;
+}
+.tab .num{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+.tab:hover{color:var(--ink)}
+.tab:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.tab[aria-selected="true"]{
+  background:var(--surface);border-color:var(--rule);color:var(--ink);font-weight:600;
+}
+.tab[aria-selected="true"] .num{color:var(--accent)}
+
+/* ---------- transport ---------- */
+.transport{
+  background:var(--surface);border:1px solid var(--rule);border-top:none;
+  padding:12px 18px;display:flex;flex-wrap:wrap;gap:14px 18px;align-items:center;
+}
+.btn{
+  appearance:none;font-family:var(--sans);font-size:13.5px;padding:7px 15px;border-radius:3px;
+  border:1px solid var(--rule);background:var(--surface-2);color:var(--ink);cursor:pointer;
+  display:inline-flex;align-items:center;gap:7px;transition:background .15s,border-color .15s;
+}
+.btn:hover{border-color:var(--accent)}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600;min-width:96px;justify-content:center}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.tr-group{display:flex;gap:8px;align-items:center}
+.tr-label{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
+input[type=range]{accent-color:var(--accent);width:110px}
+.progress{
+  flex:1;min-width:140px;height:3px;background:var(--rule);border-radius:2px;overflow:hidden;
+}
+.progress>i{display:block;height:100%;background:var(--accent);width:0;transition:width .12s linear}
+.step-count{font-family:var(--mono);font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums;min-width:78px;text-align:right}
+
+/* ---------- panel ---------- */
+.panel{display:none;background:var(--surface);border:1px solid var(--rule);border-top:none;border-radius:0 0 4px 4px;box-shadow:var(--shadow)}
+.panel.on{display:block}
+.panel-intro{padding:20px 22px 6px;border-bottom:1px dashed var(--rule);}
+.panel-intro h2{font-family:var(--serif);font-size:20px;margin:0 0 6px;font-weight:600}
+.panel-intro p{margin:0 0 16px;color:var(--ink-2);font-size:14.5px;max-width:70ch}
+.split{display:grid;grid-template-columns:minmax(0,1fr) 306px;gap:0}
+@media (max-width:900px){.split{grid-template-columns:minmax(0,1fr)}}
+.stage{padding:18px 20px;min-width:0}
+.readout{border-left:1px solid var(--rule);padding:18px 20px;background:var(--surface-2);min-width:0}
+@media (max-width:900px){.readout{border-left:none;border-top:1px solid var(--rule)}}
+.readout h3{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-3);margin:0 0 10px;font-weight:500;
+}
+.readout section+section{margin-top:22px}
+
+/* ---------- tree ---------- */
+.treewrap{overflow:auto;border:1px solid var(--rule-soft);border-radius:3px;background:var(--surface-2);max-height:520px}
+.treewrap svg{display:block}
+.tn rect{fill:var(--surface);stroke:var(--rule);stroke-width:1.25;transition:fill .2s,stroke .2s,opacity .2s}
+.tn text{font-family:var(--mono);font-size:9.5px;fill:var(--ink-2);transition:fill .2s}
+.tn .val{font-weight:700;font-size:10px}
+.tn{opacity:.12;transition:opacity .2s}
+.tn.seen{opacity:1}
+.tn.active rect{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2}
+.tn.active text{fill:var(--ink)}
+.tn.done rect{stroke:var(--rule)}
+.tn.done .lab{fill:var(--ink-2)}
+.tn.dup rect{fill:var(--c-delete-bg);stroke:var(--c-delete);stroke-dasharray:none}
+.tn.dup .lab{fill:var(--c-delete)}
+.tn.hit rect{fill:var(--c-hit-bg);stroke:var(--c-hit);stroke-dasharray:3 2.5}
+.tn.hit .lab{fill:var(--c-hit)}
+.tn .val{fill:var(--ink)}
+.edge{fill:none;stroke:var(--rule);stroke-width:1.4;opacity:.14;transition:opacity .2s,stroke .2s}
+.edge.seen{opacity:.85}
+.edge.op-match{stroke:var(--c-match)}
+.edge.op-replace{stroke:var(--c-replace)}
+.edge.op-delete{stroke:var(--c-delete)}
+.edge.op-insert{stroke:var(--c-insert)}
+.zoomrow{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.note{font-size:13px;color:var(--ink-2);margin:0}
+.warn{
+  font-size:13.5px;color:var(--c-delete);background:var(--c-delete-bg);
+  border:1px solid var(--c-delete);border-radius:3px;padding:10px 13px;margin:0 0 12px;
+}
+
+/* ---------- grids (call-count / memo / dp) ---------- */
+.grid{border-collapse:separate;border-spacing:3px;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.grid th{
+  font-weight:500;font-size:11.5px;color:var(--ink-3);padding:3px 6px;text-align:center;
+  letter-spacing:.06em;
+}
+.grid td{
+  width:38px;height:34px;text-align:center;font-size:13px;border-radius:3px;
+  background:var(--surface);border:1px solid var(--rule-soft);color:var(--ink-3);
+  transition:background .2s,color .2s,border-color .2s,transform .2s;position:relative;
+}
+.gridwrap{overflow-x:auto;padding-bottom:4px}
+.grid td.filled{color:var(--ink);border-color:var(--rule);font-weight:500}
+.grid td.base{background:var(--surface-2);color:var(--ink-2)}
+.grid td.src-match{background:var(--c-match-bg);border-color:var(--c-match);color:var(--c-match)}
+.grid td.src-replace{background:var(--c-replace-bg);border-color:var(--c-replace);color:var(--c-replace)}
+.grid td.src-delete{background:var(--c-delete-bg);border-color:var(--c-delete);color:var(--c-delete)}
+.grid td.src-insert{background:var(--c-insert-bg);border-color:var(--c-insert);color:var(--c-insert)}
+.grid td.hot1{background:var(--c-delete-bg);color:var(--c-delete);border-color:var(--rule)}
+.grid td.hot2{background:var(--c-delete);color:var(--on-accent);border-color:var(--c-delete);font-weight:700}
+.grid td.cur{border-color:var(--accent);border-width:2px;background:var(--accent-soft);color:var(--ink);font-weight:700;transform:scale(1.06);z-index:1}
+.grid td.path{background:var(--accent);color:var(--on-accent);border-color:var(--accent);font-weight:700}
+.grid td .glyph{position:absolute;top:1px;left:3px;font-size:9px;opacity:.75;line-height:1}
+
+/* ---------- stat rows ---------- */
+.stats{display:flex;flex-direction:column;gap:9px}
+.stat{display:flex;justify-content:space-between;align-items:baseline;gap:10px;border-bottom:1px dotted var(--rule);padding-bottom:7px}
+.stat .n{font-size:13px;color:var(--ink-2)}
+.stat .v{font-family:var(--mono);font-size:19px;font-weight:700;font-variant-numeric:tabular-nums}
+.stat .v.sm{font-size:15px;font-weight:500;color:var(--ink-2)}
+
+/* ---------- call stack ---------- */
+.stack{display:flex;flex-direction:column-reverse;gap:3px;font-family:var(--mono);font-size:12.5px;max-height:190px;overflow-y:auto}
+.stack div{
+  padding:3px 9px;background:var(--surface);border:1px solid var(--rule-soft);border-radius:3px;
+  border-left:3px solid var(--rule);color:var(--ink-2);
+}
+.stack div:last-child{border-left-color:var(--accent);color:var(--ink);font-weight:500}
+.stack .empty{border:none;background:none;color:var(--ink-3);padding-left:0}
+
+/* ---------- formula readout ---------- */
+.formula{
+  font-family:var(--mono);font-size:13px;line-height:2;background:var(--surface);
+  border:1px solid var(--rule-soft);border-radius:3px;padding:11px 13px;word-break:break-word;
+}
+.formula .t-match{color:var(--c-match)}
+.formula .t-replace{color:var(--c-replace)}
+.formula .t-delete{color:var(--c-delete)}
+.formula .t-insert{color:var(--c-insert)}
+.formula b{color:var(--accent)}
+.formula .muted{color:var(--ink-3)}
+
+/* ---------- legend ---------- */
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px}
+.legend span{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2);font-family:var(--mono)}
+.legend i{width:11px;height:11px;border-radius:2px;display:inline-block;border:1px solid}
+.lg-match i{background:var(--c-match-bg);border-color:var(--c-match)}
+.lg-replace i{background:var(--c-replace-bg);border-color:var(--c-replace)}
+.lg-delete i{background:var(--c-delete-bg);border-color:var(--c-delete)}
+.lg-insert i{background:var(--c-insert-bg);border-color:var(--c-insert)}
+.lg-hit i{background:var(--c-hit-bg);border-color:var(--c-hit);border-style:dashed}
+.lg-dup i{background:var(--c-delete-bg);border-color:var(--c-delete)}
+
+/* ---------- steps log ---------- */
+.log{display:flex;flex-direction:column;gap:5px;font-size:13px;max-height:230px;overflow-y:auto}
+.log div{display:flex;gap:9px;align-items:baseline;padding:4px 0;border-bottom:1px dotted var(--rule)}
+.log .op{font-family:var(--mono);font-size:10.5px;padding:1px 6px;border-radius:2px;border:1px solid;white-space:nowrap}
+.op-match{color:var(--c-match);border-color:var(--c-match);background:var(--c-match-bg)}
+.op-replace{color:var(--c-replace);border-color:var(--c-replace);background:var(--c-replace-bg)}
+.op-delete{color:var(--c-delete);border-color:var(--c-delete);background:var(--c-delete-bg)}
+.op-insert{color:var(--c-insert);border-color:var(--c-insert);background:var(--c-insert-bg)}
+
+/* ---------- code ---------- */
+details.code{margin:18px 20px 20px;border:1px solid var(--rule);border-radius:3px;background:var(--surface-2)}
+details.code summary{
+  cursor:pointer;padding:10px 15px;font-family:var(--mono);font-size:12px;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);
+}
+details.code summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+details.code pre{
+  margin:0;padding:4px 16px 16px;overflow-x:auto;font-family:var(--mono);
+  font-size:12.5px;line-height:1.85;color:var(--ink-2);
+}
+pre .ln{display:block;padding:0 6px;margin:0 -6px;border-radius:2px;transition:background .2s}
+pre .ln.hot{background:var(--accent-soft);color:var(--ink)}
+pre .kw{color:var(--c-insert)}
+pre .cm{color:var(--ink-3);font-style:italic}
+pre .st{color:var(--c-match)}
+
+/* ---------- verdict ---------- */
+.verdict{margin-top:44px}
+.verdict h2{font-family:var(--serif);font-size:24px;margin:0 0 6px;font-weight:600}
+.verdict>p{margin:0 0 22px;color:var(--ink-2);font-size:14.5px;max-width:66ch}
+.bars{display:flex;flex-direction:column;gap:16px;background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:22px 24px;box-shadow:var(--shadow)}
+.bar{display:grid;grid-template-columns:118px minmax(0,1fr) 108px;gap:14px;align-items:center}
+@media (max-width:640px){.bar{grid-template-columns:1fr;gap:5px}}
+.bar .nm{font-size:14px;font-weight:600}
+.bar .nm small{display:block;font-weight:400;color:var(--ink-3);font-family:var(--mono);font-size:10.5px;letter-spacing:.08em}
+.bar .track{height:26px;background:var(--surface-2);border:1px solid var(--rule-soft);border-radius:2px;overflow:hidden}
+.bar .fill{height:100%;transition:width .6s cubic-bezier(.2,.7,.3,1)}
+.bar:nth-child(1) .fill{background:var(--c-delete)}
+.bar:nth-child(2) .fill{background:var(--c-replace)}
+.bar:nth-child(3) .fill{background:var(--c-match)}
+.bar .qty{font-family:var(--mono);font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+@media (max-width:640px){.bar .qty{text-align:left}}
+.kicker{margin:22px 0 0;font-size:14.5px;color:var(--ink-2);max-width:66ch}
+.kicker strong{color:var(--ink)}
+
+footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--rule);font-size:12.5px;color:var(--ink-3);font-family:var(--mono)}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important}
+}
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">LeetCode 72 · Edit Distance</div>
+  <h1>同一条递推式，<span class="hl">三种走法</span></h1>
+  <p class="lede">裸递归、记忆化递归、递推填表——它们算的是完全相同的东西。区别只在于：谁把算过的结果记住了。下面把三者的执行过程逐步放慢给你看。</p>
+
+  <div class="console">
+    <div class="field">
+      <label for="w1">word1</label>
+      <input id="w1" value="hor" maxlength="7" spellcheck="false" autocomplete="off">
+    </div>
+    <div class="arrowbox">→</div>
+    <div class="field">
+      <label for="w2">word2</label>
+      <input id="w2" value="cos" maxlength="7" spellcheck="false" autocomplete="off">
+    </div>
+    <div class="presets">
+      <span class="tr-label">预设</span>
+      <div class="preset-row" id="presets"></div>
+    </div>
+    <div class="answer">
+      <span class="k">编辑距离</span>
+      <span class="v" id="answer">2</span>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button class="tab" role="tab" id="tab1" aria-controls="p1" aria-selected="true"><span class="num">01</span>裸递归</button>
+  <button class="tab" role="tab" id="tab2" aria-controls="p2" aria-selected="false"><span class="num">02</span>记忆化递归</button>
+  <button class="tab" role="tab" id="tab3" aria-controls="p3" aria-selected="false"><span class="num">03</span>递推填表</button>
+</nav>
+
+<div class="transport">
+  <button class="btn primary" id="play">▶ 播放</button>
+  <button class="btn" id="step">单步 →</button>
+  <button class="btn" id="reset">↺ 重置</button>
+  <div class="tr-group">
+    <span class="tr-label">速度</span>
+    <input type="range" id="speed" min="1" max="5" value="3" aria-label="播放速度">
+  </div>
+  <div class="progress"><i id="prog"></i></div>
+  <div class="step-count" id="stepcount">0 / 0</div>
+</div>
+
+<!-- ============ PANEL 1 ============ -->
+<section class="panel on" id="p1" role="tabpanel" aria-labelledby="tab1">
+  <div class="panel-intro">
+    <h2>裸递归：同一个格子被反复算</h2>
+    <p>每个节点是一次 <code>f(i,j)</code> 调用。字符相同时只长出一个孩子（白拿），不同时长出三个（替换 / 删除 / 插入）。留意右侧的<strong>调用次数热力表</strong>——同一个 <code>(i,j)</code> 被点亮几次，就是被重算了几次。</p>
+  </div>
+  <div class="split">
+    <div class="stage">
+      <div class="zoomrow">
+        <span class="tr-label">缩放</span>
+        <input type="range" id="zoom1" min="40" max="200" value="100" aria-label="递归树缩放">
+        <p class="note" id="treenote1"></p>
+      </div>
+      <div id="warn1"></div>
+      <div class="treewrap" id="tree1"></div>
+      <div class="legend">
+        <span class="lg-replace"><i></i>替换 f(i-1,j-1)</span>
+        <span class="lg-delete"><i></i>删除 f(i-1,j)</span>
+        <span class="lg-insert"><i></i>插入 f(i,j-1)</span>
+        <span class="lg-match"><i></i>字符相同，白拿</span>
+      </div>
+    </div>
+    <aside class="readout">
+      <section>
+        <h3>调用次数热力表</h3>
+        <div class="gridwrap"><div id="heat1"></div></div>
+        <div class="legend">
+          <span class="lg-dup"><i></i>被算过 2 次以上</span>
+        </div>
+      </section>
+      <section>
+        <h3>当前调用栈</h3>
+        <div class="stack" id="stack1"></div>
+      </section>
+      <section>
+        <h3>计数</h3>
+        <div class="stats">
+          <div class="stat"><span class="n">已发生调用</span><span class="v" id="c1a">0</span></div>
+          <div class="stat"><span class="n">其中重复的</span><span class="v" id="c1b">0</span></div>
+          <div class="stat"><span class="n">本质不同的状态</span><span class="v sm" id="c1c">0</span></div>
+        </div>
+      </section>
+    </aside>
+  </div>
+  <details class="code">
+    <summary>对应代码</summary>
+    <pre id="code1"></pre>
+  </details>
+</section>
+
+<!-- ============ PANEL 2 ============ -->
+<section class="panel" id="p2" role="tabpanel" aria-labelledby="tab2">
+  <div class="panel-intro">
+    <h2>记忆化：同一棵树，被剪掉一大半</h2>
+    <p>树的形状没变，只是每当走到一个算过的 <code>(i,j)</code>，就不再往下展开，直接查表返回——图上是一个虚线的 <strong>⟳ 缓存命中</strong>节点。右边的备忘录同时在填。看看剩下的树比上一页小了多少。</p>
+  </div>
+  <div class="split">
+    <div class="stage">
+      <div class="zoomrow">
+        <span class="tr-label">缩放</span>
+        <input type="range" id="zoom2" min="40" max="200" value="100" aria-label="递归树缩放">
+        <p class="note" id="treenote2"></p>
+      </div>
+      <div id="warn2"></div>
+      <div class="treewrap" id="tree2"></div>
+      <div class="legend">
+        <span class="lg-replace"><i></i>替换</span>
+        <span class="lg-delete"><i></i>删除</span>
+        <span class="lg-insert"><i></i>插入</span>
+        <span class="lg-match"><i></i>白拿</span>
+        <span class="lg-hit"><i></i>缓存命中，就地返回</span>
+      </div>
+    </div>
+    <aside class="readout">
+      <section>
+        <h3>备忘录 memo[i][j]</h3>
+        <div class="gridwrap"><div id="memo2"></div></div>
+      </section>
+      <section>
+        <h3>当前调用栈</h3>
+        <div class="stack" id="stack2"></div>
+      </section>
+      <section>
+        <h3>计数</h3>
+        <div class="stats">
+          <div class="stat"><span class="n">已发生调用</span><span class="v" id="c2a">0</span></div>
+          <div class="stat"><span class="n">缓存命中</span><span class="v" id="c2b">0</span></div>
+          <div class="stat"><span class="n">真正计算的状态</span><span class="v sm" id="c2c">0</span></div>
+        </div>
+      </section>
+    </aside>
+  </div>
+  <details class="code">
+    <summary>对应代码</summary>
+    <pre id="code2"></pre>
+  </details>
+</section>
+
+<!-- ============ PANEL 3 ============ -->
+<section class="panel" id="p3" role="tabpanel" aria-labelledby="tab3">
+  <div class="panel-intro">
+    <h2>递推填表：把树摊平成一张表</h2>
+    <p>不再递归，从左上角一行行往右下推。每填一格，先点亮它依赖的<strong>左、上、左上</strong>三格，比大小，再落笔。填满之后会从右下角<strong>回溯</strong>出一条最优路径——那就是具体该怎么改。</p>
+  </div>
+  <div class="split">
+    <div class="stage">
+      <div class="gridwrap"><div id="dp3"></div></div>
+      <div class="legend">
+        <span class="lg-match"><i></i>↖ 字符相同，直接继承</span>
+        <span class="lg-replace"><i></i>↖ 替换 +1</span>
+        <span class="lg-delete"><i></i>↑ 删除 +1</span>
+        <span class="lg-insert"><i></i>← 插入 +1</span>
+      </div>
+    </div>
+    <aside class="readout">
+      <section>
+        <h3>当前这一格</h3>
+        <div class="formula" id="formula3">按播放开始</div>
+      </section>
+      <section>
+        <h3>回溯出的改法</h3>
+        <div class="log" id="log3"></div>
+      </section>
+      <section>
+        <h3>计数</h3>
+        <div class="stats">
+          <div class="stat"><span class="n">已填格子</span><span class="v" id="c3a">0</span></div>
+          <div class="stat"><span class="n">表格总格数</span><span class="v sm" id="c3b">0</span></div>
+        </div>
+      </section>
+    </aside>
+  </div>
+  <details class="code">
+    <summary>对应代码</summary>
+    <pre id="code3"></pre>
+  </details>
+</section>
+
+<!-- ============ VERDICT ============ -->
+<section class="verdict">
+  <h2>三者的代价对照</h2>
+  <p>下面是当前这组字符串下，三种写法各自要做的工作量。字符串每加长一点，第一条就会失控地往外冲，后两条几乎不动。</p>
+  <div class="bars" id="bars">
+    <div class="bar">
+      <div class="nm">裸递归<small>O(3^(n+m))</small></div>
+      <div class="track"><div class="fill" id="bar1"></div></div>
+      <div class="qty" id="q1">—</div>
+    </div>
+    <div class="bar">
+      <div class="nm">记忆化递归<small>O(n·m)</small></div>
+      <div class="track"><div class="fill" id="bar2"></div></div>
+      <div class="qty" id="q2">—</div>
+    </div>
+    <div class="bar">
+      <div class="nm">递推填表<small>O(n·m)</small></div>
+      <div class="track"><div class="fill" id="bar3"></div></div>
+      <div class="qty" id="q3">—</div>
+    </div>
+  </div>
+  <p class="kicker" id="kicker"></p>
+</section>
+
+<footer>空格键播放 / 暂停 · 方向键 → 单步 · 数字键 1 2 3 切换解法</footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+const $ = s => document.querySelector(s);
+const OPNAME = {match:"白拿", replace:"替换", delete:"删除", insert:"插入"};
+const OPGLYPH = {match:"↖", replace:"↖", delete:"↑", insert:"←"};
+const MAX_TREE_NODES = 1600;
+
+/* ---------------- algorithms ---------------- */
+
+// exact naive call count, computed by DP so it never explodes
+function naiveCallCount(w1, w2){
+  const n = w1.length, m = w2.length;
+  const C = [];
+  for (let i=0;i<=n;i++) C.push(new Array(m+1).fill(0));
+  for (let i=0;i<=n;i++) for (let j=0;j<=m;j++){
+    if (i===0 || j===0) C[i][j] = 1;
+    else if (w1[i-1]===w2[j-1]) C[i][j] = 1 + C[i-1][j-1];
+    else C[i][j] = 1 + C[i-1][j-1] + C[i-1][j] + C[i][j-1];
+  }
+  return C[n][m];
+}
+
+function buildTree(w1, w2, memoize, budget){
+  const memo = new Map();
+  let nid = 0, aborted = false;
+  const key = (i,j) => i+","+j;
+
+  function rec(i, j, depth, op){
+    if (nid >= budget) { aborted = true; return null; }
+    const node = {id:nid++, i, j, depth, op, children:[], kind:null, value:0};
+    const k = key(i,j);
+    if (memoize && memo.has(k)) { node.kind="hit"; node.value = memo.get(k); return node; }
+    if (i === 0)            { node.kind="base"; node.value = j; }
+    else if (j === 0)       { node.kind="base"; node.value = i; }
+    else if (w1[i-1] === w2[j-1]) {
+      node.kind = "match";
+      const c = rec(i-1, j-1, depth+1, "match");
+      if (!c) return null;
+      node.children.push(c);
+      node.value = c.value;
+    } else {
+      node.kind = "branch";
+      const a = rec(i-1, j-1, depth+1, "replace"); if (!a) return null;
+      const b = rec(i-1, j,   depth+1, "delete");  if (!b) return null;
+      const c = rec(i,   j-1, depth+1, "insert");  if (!c) return null;
+      node.children.push(a,b,c);
+      node.value = 1 + Math.min(a.value, b.value, c.value);
+    }
+    if (memoize) memo.set(k, node.value);
+    return node;
+  }
+  const root = rec(w1.length, w2.length, 0, null);
+  return {root, aborted};
+}
+
+function layoutTree(root){
+  const GAP = 46, LVL = 60;
+  let leaf = 0, maxDepth = 0;
+  (function walk(n){
+    maxDepth = Math.max(maxDepth, n.depth);
+    if (!n.children.length) { n.x = leaf * GAP; leaf++; }
+    else { n.children.forEach(walk); n.x = (n.children[0].x + n.children[n.children.length-1].x)/2; }
+    n.y = n.depth * LVL;
+  })(root);
+  return {width:(leaf)*GAP + 16, height:maxDepth*LVL + 40, depth:maxDepth, count:countNodes(root)};
+}
+function countNodes(n){ return 1 + n.children.reduce((s,c)=>s+countNodes(c), 0); }
+function indexNodes(root){
+  const map = new Map();
+  (function walk(n){ map.set(n.id, n); n.children.forEach(walk); })(root);
+  return map;
+}
+
+function treeEvents(root){
+  const ev = [];
+  (function walk(n){
+    ev.push({t:"enter", node:n});
+    n.children.forEach(walk);
+    ev.push({t:"exit", node:n});
+  })(root);
+  return ev;
+}
+
+function tableTrace(w1, w2){
+  const n = w1.length, m = w2.length;
+  const dp = [], ops = [], ev = [];
+  for (let i=0;i<=n;i++){ dp.push(new Array(m+1).fill(0)); ops.push(new Array(m+1).fill(null)); }
+  for (let i=0;i<=n;i++){ dp[i][0] = i; ev.push({t:"base", i, j:0, val:i}); }
+  for (let j=1;j<=m;j++){ dp[0][j] = j; ev.push({t:"base", i:0, j, val:j}); }
+  for (let i=1;i<=n;i++) for (let j=1;j<=m;j++){
+    if (w1[i-1] === w2[j-1]){
+      const srcs = [{i:i-1, j:j-1, op:"match", v:dp[i-1][j-1]}];
+      ev.push({t:"look", i, j, srcs, match:true, ch:w1[i-1]});
+      dp[i][j] = dp[i-1][j-1]; ops[i][j] = "match";
+      ev.push({t:"set", i, j, val:dp[i][j], op:"match"});
+    } else {
+      const srcs = [
+        {i:i-1, j:j-1, op:"replace", v:dp[i-1][j-1]},
+        {i:i-1, j:j,   op:"delete",  v:dp[i-1][j]},
+        {i:i,   j:j-1, op:"insert",  v:dp[i][j-1]}
+      ];
+      let best = srcs[0];
+      for (const s of srcs) if (s.v < best.v) best = s;
+      ev.push({t:"look", i, j, srcs, match:false, a:w1[i-1], b:w2[j-1], best:best.op});
+      dp[i][j] = best.v + 1; ops[i][j] = best.op;
+      ev.push({t:"set", i, j, val:dp[i][j], op:best.op});
+    }
+  }
+  let i = n, j = m;
+  while (i > 0 || j > 0){
+    let op, desc;
+    if (i === 0)                { op = "insert"; desc = "插入 " + w2[j-1]; }
+    else if (j === 0)           { op = "delete"; desc = "删除 " + w1[i-1]; }
+    else                        { op = ops[i][j];
+      if (op === "match")        desc = "保留 " + w1[i-1];
+      else if (op === "replace") desc = "把 " + w1[i-1] + " 替换成 " + w2[j-1];
+      else if (op === "delete")  desc = "删除 " + w1[i-1];
+      else                       desc = "插入 " + w2[j-1];
+    }
+    ev.push({t:"back", i, j, op, desc});
+    if (op === "match" || op === "replace") { i--; j--; }
+    else if (op === "delete") i--;
+    else j--;
+  }
+  ev.push({t:"back", i:0, j:0, op:null, desc:"回到起点，全部改完"});
+  return {ev, dp, cells:(n+1)*(m+1)};
+}
+
+/* ---------------- shared render helpers ---------------- */
+
+function gridHTML(w1, w2, cellFn){
+  const n = w1.length, m = w2.length;
+  let h = '<table class="grid"><thead><tr><th></th><th>ε</th>';
+  for (let j=1;j<=m;j++) h += "<th>"+esc(w2[j-1])+"</th>";
+  h += "</tr></thead><tbody>";
+  for (let i=0;i<=n;i++){
+    h += "<tr><th>" + (i===0 ? "ε" : esc(w1[i-1])) + "</th>";
+    for (let j=0;j<=m;j++) h += '<td data-i="'+i+'" data-j="'+j+'"></td>';
+    h += "</tr>";
+  }
+  return h + "</tbody></table>";
+}
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function renderTreeSVG(root, dims){
+  const parts = [];
+  const NW = 38, NH = 21;
+  (function walk(n){
+    for (const c of n.children){
+      const x1 = n.x + NW/2, y1 = n.y + NH, x2 = c.x + NW/2, y2 = c.y;
+      const my = (y1 + y2) / 2;
+      parts.push('<path class="edge op-'+c.op+'" data-eid="'+c.id+'" d="M'+x1+','+y1+' C'+x1+','+my+' '+x2+','+my+' '+x2+','+y2+'"/>');
+      walk(c);
+    }
+  })(root);
+  const nodes = [];
+  (function walk(n){
+    nodes.push(
+      '<g class="tn" data-id="'+n.id+'" data-key="'+n.i+','+n.j+'" transform="translate('+n.x+','+n.y+')">'
+      + '<rect width="'+NW+'" height="'+NH+'" rx="3"/>'
+      + '<text class="lab" x="5" y="14.5">'+n.i+','+n.j+'</text>'
+      + '<text class="val" x="'+(NW-5)+'" y="14.5" text-anchor="end"></text>'
+      + '</g>'
+    );
+    n.children.forEach(walk);
+  })(root);
+  return '<svg xmlns="http://www.w3.org/2000/svg" width="'+dims.width+'" height="'+dims.height+'" '
+       + 'viewBox="0 0 '+dims.width+' '+dims.height+'">'
+       + '<g transform="translate(10,14)">' + parts.join("") + nodes.join("") + '</g></svg>';
+}
+
+/* ---------------- state ---------------- */
+
+const S = {
+  w1:"hor", w2:"cos",
+  panel:1,
+  playing:false,
+  timer:null,
+  idx:[0,0,0,0],       // 1-indexed by panel
+  ev:[null,[],[],[]],
+  tree:[null,null,null],
+  nodeMap:[null,null,null],
+  dims:[null,null,null],
+  zoomTouched:[false,false,false],
+  table:null
+};
+
+const SPEEDS = {1:900, 2:520, 3:290, 4:150, 5:60};
+
+/* ---------------- build for current strings ---------------- */
+
+function rebuild(){
+  const w1 = S.w1, w2 = S.w2;
+  const n = w1.length, m = w2.length;
+
+  // panel 3
+  S.table = tableTrace(w1, w2);
+  S.ev[3] = S.table.ev;
+  $("#answer").textContent = S.table.dp[n][m];
+  $("#dp3").innerHTML = gridHTML(w1, w2);
+  $("#c3b").textContent = S.table.cells;
+
+  // panel 1
+  const t1 = buildTree(w1, w2, false, MAX_TREE_NODES);
+  buildTreePanel(1, t1, w1, w2);
+  $("#heat1").innerHTML = gridHTML(w1, w2);
+
+  // panel 2
+  const t2 = buildTree(w1, w2, true, MAX_TREE_NODES);
+  buildTreePanel(2, t2, w1, w2);
+  $("#memo2").innerHTML = gridHTML(w1, w2);
+
+  // verdict
+  const naive = naiveCallCount(w1, w2);
+  let memoCalls = 0;
+  if (t2.root) memoCalls = countNodes(t2.root);
+  const cells = S.table.cells;
+  const max = Math.max(naive, memoCalls, cells);
+  $("#q1").textContent = fmt(naive) + " 次调用";
+  $("#q2").textContent = fmt(memoCalls) + " 次调用";
+  $("#q3").textContent = fmt(cells) + " 格";
+  $("#bar1").style.width = (naive/max*100) + "%";
+  $("#bar2").style.width = (memoCalls/max*100) + "%";
+  $("#bar3").style.width = (cells/max*100) + "%";
+  const proj = [4,6,8,10].map(L => {
+    const a = "abcdefghij".slice(0,L), b = "klmnopqrst".slice(0,L);
+    return "<br>&nbsp;&nbsp;两个长度 " + L + " 的串（全错配）：裸递归 <strong>" + fmt(naiveCallCount(a,b))
+         + "</strong> 次 &nbsp;·&nbsp; 填表 <strong>" + (L+1)*(L+1) + "</strong> 格";
+  }).join("");
+  $("#kicker").innerHTML = '把 <strong>' + esc(w1) + '</strong> 改成 <strong>' + esc(w2) + '</strong>，'
+    + '裸递归要 <strong>' + fmt(naive) + '</strong> 次函数调用，记忆化只要 <strong>' + fmt(memoCalls)
+    + '</strong> 次，填表只碰 <strong>' + cells + '</strong> 个格子。<br>这里差距还看得下去，'
+    + '因为串很短。串一长，第一根条就再也画不下了：' + proj;
+
+  for (let p=1;p<=3;p++) seek(p, 0);
+  renderTransport();
+}
+function fmt(x){ return x.toLocaleString("en-US"); }
+
+function buildTreePanel(p, t, w1, w2){
+  const wrap = $("#tree"+p), warn = $("#warn"+p), note = $("#treenote"+p);
+  if (!t.root || t.aborted){
+    S.tree[p] = null; S.ev[p] = [];
+    wrap.innerHTML = "";
+    warn.innerHTML = '<p class="warn">这组字符串的递归树超过 ' + MAX_TREE_NODES
+      + ' 个节点，画出来只会是一团黑。换个短一点的输入看动画，下方「代价对照」里的数字仍然是精确的。</p>';
+    note.textContent = "";
+    return;
+  }
+  warn.innerHTML = "";
+  const dims = layoutTree(t.root);
+  S.tree[p] = t.root; S.dims[p] = dims; S.nodeMap[p] = indexNodes(t.root);
+  S.ev[p] = treeEvents(t.root);
+  wrap.innerHTML = renderTreeSVG(t.root, dims);
+  note.textContent = dims.count + " 个节点，最深 " + dims.depth + " 层 · 播放时视图自动跟随当前节点";
+  fitZoom(p);
+}
+
+function applyZoom(p){
+  const svg = $("#tree"+p+" svg"); if (!svg || !S.dims[p]) return;
+  const z = +$("#zoom"+p).value / 100;
+  svg.setAttribute("width", Math.round(S.dims[p].width * z));
+  svg.setAttribute("height", Math.round(S.dims[p].height * z));
+}
+
+// default the slider so the whole tree is visible; only until the user drags it
+function fitZoom(p){
+  if (!S.dims[p] || S.zoomTouched[p]) { applyZoom(p); return; }
+  const w = $("#tree"+p).clientWidth;
+  if (w > 40){
+    const z = Math.max(45, Math.min(100, Math.floor((w - 18) / S.dims[p].width * 100)));
+    $("#zoom"+p).value = z;
+  }
+  applyZoom(p);
+}
+
+/* ---------------- seek / paint ---------------- */
+
+function seek(p, idx){
+  const ev = S.ev[p];
+  S.idx[p] = Math.max(0, Math.min(idx, ev.length));
+  if (p === 3) paintTable(); else paintTree(p);
+  if (p === S.panel) renderTransport();
+}
+
+function paintTree(p){
+  const root = S.tree[p]; if (!root) return;
+  const ev = S.ev[p], upto = S.idx[p];
+  const status = new Map();     // id -> 'active' | 'done'
+  const stack = [];
+  const counts = new Map();     // "i,j" -> times entered
+  let calls = 0, hits = 0;
+
+  for (let k=0;k<upto;k++){
+    const e = ev[k];
+    if (e.t === "enter"){
+      status.set(e.node.id, "active");
+      stack.push(e.node);
+      calls++;
+      const key = e.node.i+","+e.node.j;
+      counts.set(key, (counts.get(key)||0)+1);
+      if (e.node.kind === "hit") hits++;
+    } else {
+      status.set(e.node.id, "done");
+      stack.pop();
+    }
+  }
+
+  const wrap = $("#tree"+p), nodeMap = S.nodeMap[p];
+  wrap.querySelectorAll(".tn").forEach(g => {
+    const id = +g.dataset.id;
+    const st = status.get(id);
+    g.classList.toggle("seen", !!st);
+    g.classList.toggle("active", st === "active");
+    g.classList.toggle("done", st === "done");
+    const val = g.querySelector(".val");
+    val.textContent = "";
+    g.classList.remove("dup","hit");
+    if (st){
+      const node = nodeMap.get(id);
+      if (node.kind === "hit") g.classList.add("hit");
+      else if (p === 1 && (counts.get(node.i+","+node.j)||0) > 1) g.classList.add("dup");
+      if (st === "done") val.textContent = node.kind === "hit" ? "⟳"+node.value : node.value;
+    }
+  });
+  wrap.querySelectorAll(".edge").forEach(e => {
+    e.classList.toggle("seen", status.has(+e.dataset.eid));
+  });
+
+  // keep the node under the spotlight in view
+  const focus = stack.length ? stack[stack.length-1] : (upto === 0 ? root : null);
+  if (focus && wrap.clientWidth){
+    const z = +$("#zoom"+p).value/100;
+    const tx = (focus.x + 33) * z, ty = (focus.y + 26) * z;
+    if (tx < wrap.scrollLeft + 70 || tx > wrap.scrollLeft + wrap.clientWidth - 70)
+      wrap.scrollLeft = Math.max(0, tx - wrap.clientWidth/2);
+    if (ty < wrap.scrollTop + 40 || ty > wrap.scrollTop + wrap.clientHeight - 40)
+      wrap.scrollTop = Math.max(0, ty - wrap.clientHeight/2);
+  }
+
+  // stack panel
+  const sEl = $("#stack"+p);
+  sEl.innerHTML = stack.length
+    ? stack.map(n => '<div>f('+n.i+", "+n.j+")</div>").join("")
+    : '<div class="empty">— 空 —</div>';
+
+  if (p === 1){
+    let dupCalls = 0, distinct = 0;
+    counts.forEach(c => { distinct++; dupCalls += (c-1); });
+    $("#c1a").textContent = calls;
+    $("#c1b").textContent = dupCalls;
+    $("#c1c").textContent = distinct;
+    $("#heat1").querySelectorAll("td").forEach(td => {
+      const c = counts.get(td.dataset.i+","+td.dataset.j) || 0;
+      td.textContent = c ? c : "";
+      td.className = c === 0 ? "" : (c === 1 ? "filled" : (c <= 3 ? "hot1" : "hot2"));
+    });
+    highlightLines("#code1", stack.length ? stack[stack.length-1].kind : null);
+  } else {
+    // memo table = values of nodes that have finished computing (non-hit)
+    const memo = new Map();
+    for (let k=0;k<upto;k++){
+      const e = ev[k];
+      if (e.t === "exit" && e.node.kind !== "hit") memo.set(e.node.i+","+e.node.j, e.node.value);
+    }
+    let justHit = null;
+    for (let k=upto-1;k>=0 && k>=upto-2;k--)
+      if (ev[k].t === "enter" && ev[k].node.kind === "hit"){ justHit = ev[k].node.i+","+ev[k].node.j; break; }
+    $("#c2a").textContent = calls;
+    $("#c2b").textContent = hits;
+    $("#c2c").textContent = memo.size;
+    $("#memo2").querySelectorAll("td").forEach(td => {
+      const key = td.dataset.i+","+td.dataset.j;
+      const has = memo.has(key);
+      td.textContent = has ? memo.get(key) : "";
+      td.className = has ? (key === justHit ? "filled src-insert" : "filled") : "";
+    });
+    highlightLines("#code2", stack.length ? stack[stack.length-1].kind : null);
+  }
+}
+
+function paintTable(){
+  const ev = S.ev[3], upto = S.idx[3];
+  const n = S.w1.length, m = S.w2.length;
+  const vals = new Map(), ops = new Map();
+  let cur = null, srcs = [], filled = 0, phase = "fill";
+  const path = new Set(), log = [];
+  let formula = "";
+
+  for (let k=0;k<upto;k++){
+    const e = ev[k];
+    if (e.t === "base"){ vals.set(e.i+","+e.j, e.val); filled++; cur = {i:e.i, j:e.j}; srcs = []; formula = baseFormula(e); }
+    else if (e.t === "look"){ cur = {i:e.i, j:e.j}; srcs = e.srcs; formula = lookFormula(e); }
+    else if (e.t === "set"){ vals.set(e.i+","+e.j, e.val); ops.set(e.i+","+e.j, e.op); filled++; formula = setFormula(e, formula); }
+    else if (e.t === "back"){ phase = "back"; cur = null; srcs = []; path.add(e.i+","+e.j); if (e.op || e.i+e.j===0) log.push(e); }
+  }
+
+  $("#c3a").textContent = filled;
+  $("#formula3").innerHTML = formula || "按播放开始";
+
+  const srcMap = new Map(srcs.map(s => [s.i+","+s.j, s.op]));
+  $("#dp3").querySelectorAll("td").forEach(td => {
+    const key = td.dataset.i+","+td.dataset.j;
+    const i = +td.dataset.i, j = +td.dataset.j;
+    const has = vals.has(key);
+    const op = ops.get(key);
+    td.innerHTML = has
+      ? (op ? '<span class="glyph">'+OPGLYPH[op]+"</span>" : "") + vals.get(key)
+      : "";
+    let cls = has ? "filled" : "";
+    if (has && (i===0 || j===0)) cls += " base";
+    if (srcMap.has(key)) cls += " src-" + srcMap.get(key);
+    if (cur && cur.i === i && cur.j === j) cls += " cur";
+    if (path.has(key)) cls = "filled path";
+    td.className = cls.trim();
+  });
+
+  $("#log3").innerHTML = log.length
+    ? log.map(e => e.op
+        ? '<div><span class="op op-'+e.op+'">'+OPNAME[e.op]+"</span><span>"+esc(e.desc)+"</span></div>"
+        : '<div><span>'+esc(e.desc)+"</span></div>").join("")
+    : '<div><span style="color:var(--ink-3)">填满表格后才开始回溯</span></div>';
+
+  highlightLines("#code3", phase === "back" ? "back" : (cur ? (srcs.length === 1 && srcs[0] && srcs[0].op === "match" ? "match" : (srcs.length ? "min" : "base")) : null));
+}
+
+function baseFormula(e){
+  return '<span class="muted">边界 </span>s[<b>'+e.i+"</b>][<b>"+e.j+"</b>] = "
+    + (e.i===0 ? '<span class="muted">空串 → 插 '+e.j+" 次</span> = " : '<span class="muted">删 '+e.i+" 次</span> = ")
+    + "<b>"+e.val+"</b>";
+}
+function lookFormula(e){
+  if (e.match){
+    return "s[<b>"+e.i+"</b>][<b>"+e.j+"</b>] &nbsp;<span class='muted'>字符都是 '"+esc(e.ch)+"'，白拿</span><br>"
+      + '= <span class="t-match">s['+(e.i-1)+"]["+(e.j-1)+"] = "+e.srcs[0].v+"</span>";
+  }
+  const s = e.srcs;
+  return "s[<b>"+e.i+"</b>][<b>"+e.j+"</b>] &nbsp;<span class='muted'>'"+esc(e.a)+"' ≠ '"+esc(e.b)+"'</span><br>"
+    + "= min(<br>&nbsp;&nbsp;"
+    + '<span class="t-replace">↖ '+s[0].v+" 替换</span>,<br>&nbsp;&nbsp;"
+    + '<span class="t-delete">↑ '+s[1].v+" 删除</span>,<br>&nbsp;&nbsp;"
+    + '<span class="t-insert">← '+s[2].v+" 插入</span><br>) + 1";
+}
+function setFormula(e, prev){
+  return prev + '<br><span class="muted">→</span> <b>' + e.val + "</b> "
+    + '<span class="t-'+e.op+'">('+OPNAME[e.op]+")</span>";
+}
+
+/* ---------------- code panes ---------------- */
+
+const CODE1 = [
+  ['def f(i, j):', null],
+  ['    if i == 0: return j        <span class="cm"># word1 空了，全靠插入</span>', "base"],
+  ['    if j == 0: return i        <span class="cm"># word2 空了，全靠删除</span>', "base"],
+  ['    if word1[i-1] == word2[j-1]:', "match"],
+  ['        return f(i-1, j-1)     <span class="cm"># 末尾配上了，白拿</span>', "match"],
+  ['    return 1 + min(', "branch"],
+  ['        f(i-1, j-1),           <span class="cm"># 替换</span>', "branch"],
+  ['        f(i-1, j),             <span class="cm"># 删除 word1[i-1]</span>', "branch"],
+  ['        f(i, j-1),             <span class="cm"># 插入 word2[j-1]</span>', "branch"],
+  ['    )', "branch"]
+];
+const CODE2 = [
+  ['<span class="kw">from</span> functools <span class="kw">import</span> cache', null],
+  ['', null],
+  ['<span class="kw">@cache</span>                        <span class="cm"># ← 只多了这一行</span>', "hit"],
+  ['def f(i, j):', null],
+  ['    if i == 0: return j', "base"],
+  ['    if j == 0: return i', "base"],
+  ['    if word1[i-1] == word2[j-1]:', "match"],
+  ['        return f(i-1, j-1)', "match"],
+  ['    return 1 + min(f(i-1, j-1), f(i-1, j), f(i, j-1))', "branch"]
+];
+const CODE3 = [
+  ['n, m = len(word1), len(word2)', null],
+  ['dp = [[0] * (m+1) for _ in range(n+1)]', null],
+  ['for i in range(n+1): dp[i][0] = i     <span class="cm"># 全删</span>', "base"],
+  ['for j in range(m+1): dp[0][j] = j     <span class="cm"># 全插</span>', "base"],
+  ['for i in range(1, n+1):', null],
+  ['    for j in range(1, m+1):', null],
+  ['        if word1[i-1] == word2[j-1]:', "match"],
+  ['            dp[i][j] = dp[i-1][j-1]', "match"],
+  ['        else:', "min"],
+  ['            dp[i][j] = min(dp[i-1][j-1],   <span class="cm"># 替换</span>', "min"],
+  ['                           dp[i-1][j],     <span class="cm"># 删除</span>', "min"],
+  ['                           dp[i][j-1]) + 1 <span class="cm"># 插入</span>', "min"],
+  ['return dp[n][m]', "back"]
+];
+function paintCode(sel, lines){
+  $(sel).innerHTML = lines.map(([html, tag]) =>
+    '<span class="ln"' + (tag ? ' data-tag="'+tag+'"' : "") + ">" + (html || "&nbsp;") + "</span>"
+  ).join("");
+}
+function highlightLines(sel, tag){
+  const el = $(sel); if (!el) return;
+  el.querySelectorAll(".ln").forEach(l => l.classList.toggle("hot", !!tag && l.dataset.tag === tag));
+}
+
+/* ---------------- transport ---------------- */
+
+function renderTransport(){
+  const p = S.panel, total = S.ev[p].length, i = S.idx[p];
+  $("#stepcount").textContent = i + " / " + total;
+  $("#prog").style.width = total ? (i/total*100)+"%" : "0%";
+  $("#play").textContent = S.playing ? "⏸ 暂停" : (i >= total && total ? "▶ 重放" : "▶ 播放");
+  const dead = total === 0;
+  $("#play").disabled = dead; $("#step").disabled = dead;
+}
+
+function stepOnce(){
+  const p = S.panel;
+  if (S.idx[p] >= S.ev[p].length){ stop(); return false; }
+  seek(p, S.idx[p] + 1);
+  return true;
+}
+function play(){
+  const p = S.panel;
+  if (!S.ev[p].length) return;
+  if (S.idx[p] >= S.ev[p].length) seek(p, 0);
+  S.playing = true; renderTransport(); tick();
+}
+function tick(){
+  if (!S.playing) return;
+  if (!stepOnce()) return;
+  S.timer = setTimeout(tick, SPEEDS[+$("#speed").value]);
+}
+function stop(){ S.playing = false; clearTimeout(S.timer); renderTransport(); }
+
+/* ---------------- wiring ---------------- */
+
+const PRESETS = [
+  ["hor","cos","全错配"],
+  ["sea","eat","有匹配"],
+  ["cat","cut","几乎一样"],
+  ["horse","ros","LeetCode 例 1"],
+  ["horse","coser","课件那张表"]
+];
+$("#presets").innerHTML = PRESETS.map(([a,b,l],k)=>
+  '<button class="chip" data-k="'+k+'">'+a+" → "+b+' <span style="opacity:.6">'+l+"</span></button>").join("");
+$("#presets").addEventListener("click", e => {
+  const b = e.target.closest(".chip"); if (!b) return;
+  const [a, c] = PRESETS[+b.dataset.k];
+  $("#w1").value = a; $("#w2").value = c; onInput();
+});
+
+function clean(v){ return v.replace(/\s+/g, "").slice(0, 7); }
+function onInput(){
+  stop();
+  const a = clean($("#w1").value), b = clean($("#w2").value);
+  $("#w1").value = a; $("#w2").value = b;
+  S.w1 = a; S.w2 = b;
+  if (!a.length || !b.length) return;
+  rebuild();
+}
+$("#w1").addEventListener("input", onInput);
+$("#w2").addEventListener("input", onInput);
+
+document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => switchTo(+t.id.slice(3))));
+function switchTo(p){
+  stop();
+  S.panel = p;
+  document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", String(+t.id.slice(3) === p)));
+  document.querySelectorAll(".panel").forEach(el => el.classList.toggle("on", el.id === "p"+p));
+  if (p !== 3){ fitZoom(p); paintTree(p); }
+  renderTransport();
+}
+
+$("#play").addEventListener("click", () => S.playing ? stop() : play());
+$("#step").addEventListener("click", () => { stop(); stepOnce(); });
+$("#reset").addEventListener("click", () => { stop(); seek(S.panel, 0); });
+$("#zoom1").addEventListener("input", () => { S.zoomTouched[1] = true; applyZoom(1); });
+$("#zoom2").addEventListener("input", () => { S.zoomTouched[2] = true; applyZoom(2); });
+
+document.addEventListener("keydown", e => {
+  if (e.target.tagName === "INPUT") return;
+  if (e.key === " "){ e.preventDefault(); S.playing ? stop() : play(); }
+  else if (e.key === "ArrowRight"){ e.preventDefault(); stop(); stepOnce(); }
+  else if (e.key === "ArrowLeft"){ e.preventDefault(); stop(); seek(S.panel, S.idx[S.panel]-1); }
+  else if (["1","2","3"].includes(e.key)) switchTo(+e.key);
+});
+
+paintCode("#code1", CODE1);
+paintCode("#code2", CODE2);
+paintCode("#code3", CODE3);
+rebuild();
+})();
+</script>

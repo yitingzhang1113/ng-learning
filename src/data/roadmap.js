@@ -730,6 +730,7 @@ export const NODES = [
       p('Single Number II', '只出现一次的数字 II', 'Medium', 'single-number-ii'),
       p('Single Number III', '只出现一次的数字 III', 'Medium', 'single-number-iii'),
       p('Bitwise AND of Numbers Range', '数字范围按位与', 'Medium', 'bitwise-and-of-numbers-range'),
+      p('Divide Two Integers', '两数相除', 'Medium', 'divide-two-integers'),
     ],
   },
   {

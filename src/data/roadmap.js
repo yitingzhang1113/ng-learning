@@ -506,7 +506,8 @@ export const NODES = [
       lock(p('Number of Connected Components in an Undirected Graph', '无向图中连通分量的数目(DFS/BFS)', 'Medium', 'number-of-connected-components-in-an-undirected-graph', 3)),
       p('Number of Provinces', '省份数量(DFS/BFS)', 'Medium', 'number-of-provinces', 3),
       // 2. 二分图判定
-      p('Is Graph Bipartite?', '判断二分图(DFS/BFS 染色)', 'Medium', 'is-graph-bipartite', 2),
+      { ...p('Is Graph Bipartite?', '判断二分图(DFS/BFS 染色)', 'Medium', 'is-graph-bipartite', 2),
+        embed: { zh: '判断二分图 · DFS 染色动画', en: 'Is Graph Bipartite? · DFS Coloring', src: 'embeds/is-graph-bipartite-lab.html', height: 820 } },
       p('Possible Bipartition', '可能的二分法(建图 + DFS/BFS 染色)', 'Medium', 'possible-bipartition', 1),
       // 3. Union Find
       p('Redundant Connection', '冗余连接(Union Find 判环)', 'Medium', 'redundant-connection', 3),

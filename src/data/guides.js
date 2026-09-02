@@ -765,6 +765,7 @@ class Trie:
   graph: {
     tutorials: [
       { zh: '图结构的 DFS/BFS 遍历', en: 'Graph DFS/BFS Traversal', url: 'https://labuladong.online/zh/algo/data-structure-basic/graph-traverse-basic/' },
+      { zh: '二分图判定算法', en: 'Bipartite Graph', url: 'https://labuladong.online/zh/algo/data-structure/bipartite-graph/' },
       { zh: '拓扑排序算法', en: 'Topological Sort', url: 'https://labuladong.online/zh/algo/data-structure/topological-sort/' },
       { zh: 'Union-Find 并查集算法', en: 'Union-Find', url: 'https://labuladong.online/zh/algo/data-structure/union-find/' },
       { zh: 'Kruskal 最小生成树算法', en: 'Kruskal MST', url: 'https://labuladong.online/zh/algo/data-structure/kruskal/' },

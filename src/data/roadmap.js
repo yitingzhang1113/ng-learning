@@ -479,38 +479,65 @@ export const NODES = [
     ],
   },
   {
-    // 题目按套路分成 5 个小组,只在这个板块自己的窗口里当小标题展示,不额外占路线图节点。
-    // 有几道题(冗余连接 / 图有效树 / 连通分量数目)既是环检测的经典例子,也是并查集的经典例子,
-    // 按你给的大纲在两个小组里都保留了一份,方便从两个角度分别打卡/记笔记。
+    // 题目按「无向图 / 有向图」两大模块组织,每个模块下再分小组。
+    // 大类标题(count: 0, major: true)只是插入一条更醒目的分隔标题,不消耗题目。
+    // 有几道题(Alien Dictionary / Reorder Routes)在不同角度的小组里各保留一份,
+    // 方便从「拓扑排序」和「建图 + 入度」两个视角分别打卡/记笔记。
     id: 'graph', kind: 'topic', group: 'advds', zh: '图', en: 'Graph',
     problemGroups: [
-      { zh: '图的建模、入度与出度', en: 'Modeling, In-degree & Out-degree', count: 2 },
-      { zh: '拓扑排序与依赖关系', en: 'Topological Sort & Dependencies', count: 4 },
-      { zh: '连通性、环与判树', en: 'Connectivity, Cycles & Tree Check', count: 3 },
-      { zh: '并查集', en: 'Union-Find', count: 4 },
-      { zh: '最小生成树', en: 'Minimum Spanning Tree', count: 2 },
+      { zh: '一、无向图模块', en: 'I. Undirected Graph', count: 0, major: true },
+      { zh: '1. 基础遍历与连通分量', en: '1. Traversal & Connected Components', count: 4 },
+      { zh: '2. 二分图判定', en: '2. Bipartite Check', count: 2 },
+      { zh: '3. Union Find', en: '3. Union-Find', count: 4 },
+      { zh: '4. Kruskal 最小生成树', en: '4. Kruskal MST', count: 1 },
+      { zh: '5. Prim 最小生成树', en: '5. Prim MST', count: 1 },
+      { zh: '6. 无向树与度数', en: '6. Tree & Degree', count: 1 },
+      { zh: '二、有向图模块', en: 'II. Directed Graph', count: 0, major: true },
+      { zh: '1. 基础遍历与路径', en: '1. Traversal & Paths', count: 4 },
+      { zh: '2. 有向图环检测', en: '2. Cycle Detection', count: 2 },
+      { zh: '3. 拓扑排序与依赖关系', en: '3. Topological Sort & Dependencies', count: 4 },
+      { zh: '4. 图的建模、入度与出度', en: '4. Modeling, In/Out-degree', count: 3 },
     ],
     problems: [
-      // 1. 图的建模、入度与出度
-      p('Find the Town Judge', '找到小镇的法官', 'Easy', 'find-the-town-judge', 2),
-      p('Verifying an Alien Dictionary', '验证外星语词典', 'Easy', 'verifying-an-alien-dictionary', 1),
-      // 2. 拓扑排序与依赖关系
-      p('Course Schedule', '课程表(环检测)', 'Medium', 'course-schedule', 3),
-      p('Course Schedule II', '课程表 II(拓扑排序)', 'Medium', 'course-schedule-ii', 3),
-      p('Course Schedule IV', '课程表 IV', 'Medium', 'course-schedule-iv', 2),
-      p('Minimum Height Trees', '最小高度树', 'Medium', 'minimum-height-trees', 2),
-      // 3. 连通性、环与判树
-      lock(p('Graph Valid Tree', '图有效树', 'Medium', 'graph-valid-tree', 3)),
-      lock(p('Number of Connected Components in an Undirected Graph', '无向图中连通分量的数目', 'Medium', 'number-of-connected-components-in-an-undirected-graph', 3)),
-      p('Redundant Connection', '冗余连接', 'Medium', 'redundant-connection', 3),
-      // 4. 并查集 Union-Find
-      p('Redundant Connection', '冗余连接', 'Medium', 'redundant-connection', 3),
-      p('Accounts Merge', '账户合并', 'Medium', 'accounts-merge', 3),
-      lock(p('Number of Connected Components in an Undirected Graph', '无向图中连通分量的数目', 'Medium', 'number-of-connected-components-in-an-undirected-graph', 3)),
-      lock(p('Graph Valid Tree', '图有效树', 'Medium', 'graph-valid-tree', 3)),
-      // 5. 最小生成树 Minimum Spanning Tree
-      lock(p('Connecting Cities With Minimum Cost', '最低成本联通所有城市', 'Medium', 'connecting-cities-with-minimum-cost', 3)),
-      p('Min Cost to Connect All Points', '连接所有点的最小费用', 'Medium', 'min-cost-to-connect-all-points', 3),
+      // ═══ 一、无向图模块 ═══
+      // 1. 基础遍历与连通分量
+      p('Clone Graph', '克隆图(DFS/BFS + HashMap)', 'Medium', 'clone-graph', 3),
+      p('Find if Path Exists in Graph', '寻找图中是否存在路径(DFS/BFS)', 'Easy', 'find-if-path-exists-in-graph', 1),
+      lock(p('Number of Connected Components in an Undirected Graph', '无向图中连通分量的数目(DFS/BFS)', 'Medium', 'number-of-connected-components-in-an-undirected-graph', 3)),
+      p('Number of Provinces', '省份数量(DFS/BFS)', 'Medium', 'number-of-provinces', 3),
+      // 2. 二分图判定
+      p('Is Graph Bipartite?', '判断二分图(DFS/BFS 染色)', 'Medium', 'is-graph-bipartite', 2),
+      p('Possible Bipartition', '可能的二分法(建图 + DFS/BFS 染色)', 'Medium', 'possible-bipartition', 1),
+      // 3. Union Find
+      p('Redundant Connection', '冗余连接(Union Find 判环)', 'Medium', 'redundant-connection', 3),
+      p('Accounts Merge', '账户合并(Union Find 合并账户)', 'Medium', 'accounts-merge', 3),
+      p('Satisfiability of Equality Equations', '等式方程的可满足性(Union Find 等价关系)', 'Medium', 'satisfiability-of-equality-equations', 2),
+      lock(p('Graph Valid Tree', '图有效树(Union Find 判连通与环)', 'Medium', 'graph-valid-tree', 3)),
+      // 4. Kruskal 最小生成树
+      lock(p('Connecting Cities With Minimum Cost', '最低成本联通所有城市(边排序 + Union Find)', 'Medium', 'connecting-cities-with-minimum-cost', 3)),
+      // 5. Prim 最小生成树
+      p('Min Cost to Connect All Points', '连接所有点的最小费用(Prim + Min Heap)', 'Medium', 'min-cost-to-connect-all-points', 3),
+      // 6. 无向树与度数
+      p('Minimum Height Trees', '最小高度树(degree + 叶子 BFS)', 'Medium', 'minimum-height-trees', 2),
+
+      // ═══ 二、有向图模块 ═══
+      // 1. 基础遍历与路径
+      p('Keys and Rooms', '钥匙和房间(DFS/BFS + visited)', 'Medium', 'keys-and-rooms', 2),
+      p('All Paths From Source to Target', '所有可能的路径(DFS + 回溯)', 'Medium', 'all-paths-from-source-to-target', 2),
+      p('Reorder Routes to Make All Paths Lead to the City Zero', '重新规划路线(DFS + 方向标记)', 'Medium', 'reorder-routes-to-make-all-paths-lead-to-the-city-zero', 2),
+      p('Reconstruct Itinerary', '重新安排行程(DFS + Euler Path,进阶)', 'Hard', 'reconstruct-itinerary', 3),
+      // 2. 有向图环检测
+      p('Course Schedule', '课程表(DFS 三色标记 / BFS 拓扑)', 'Medium', 'course-schedule', 3),
+      p('Find Eventual Safe States', '找到最终的安全状态(DFS 三色标记)', 'Medium', 'find-eventual-safe-states', 2),
+      // 3. 拓扑排序与依赖关系
+      p('Course Schedule II', '课程表 II(标准 BFS 拓扑排序)', 'Medium', 'course-schedule-ii', 3),
+      lock(p('Alien Dictionary', '火星词典(建图 + 拓扑排序)', 'Hard', 'alien-dictionary', 3)),
+      lock(p('Parallel Courses', '并行课程(分层拓扑排序)', 'Medium', 'parallel-courses', 2)),
+      p('Course Schedule IV', '课程表 IV(先修关系查询)', 'Medium', 'course-schedule-iv', 2),
+      // 4. 图的建模、入度与出度
+      p('Find the Town Judge', '找到小镇的法官(入度 n-1、出度 0)', 'Easy', 'find-the-town-judge', 2),
+      lock(p('Alien Dictionary', '火星词典(从单词关系建图 + 入度)', 'Hard', 'alien-dictionary', 3)),
+      p('Reorder Routes to Make All Paths Lead to the City Zero', '重新规划路线(保留边的原始方向)', 'Medium', 'reorder-routes-to-make-all-paths-lead-to-the-city-zero', 2),
     ],
   },
 

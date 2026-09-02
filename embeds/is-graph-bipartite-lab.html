@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DFS 判断二分图｜动画演示</title>
+<style>
+:root{--bg:#f6f7fb;--panel:#fff;--text:#172033;--muted:#697386;--line:#d9deea;--blue:#3972e8;--orange:#f39a37;--red:#df3d56;--green:#218c64;--code:#171b27;--shadow:0 14px 35px rgba(30,42,70,.10)}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 15% 0,#e9efff,transparent 35%),var(--bg);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;color:var(--text)}
+.app{max-width:1250px;margin:auto;padding:28px}.top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:20px}.top h1{font-size:28px;margin:0 0 8px}.top p{margin:0;color:var(--muted);line-height:1.6}.badge{white-space:nowrap;padding:9px 14px;border-radius:99px;background:#fff;border:1px solid var(--line);font-weight:700}
+.grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px}.card{background:var(--panel);border:1px solid #e3e6ef;border-radius:18px;box-shadow:var(--shadow);overflow:hidden}.card h2{font-size:15px;margin:0;padding:16px 18px;border-bottom:1px solid #edf0f5}.graph{height:430px;position:relative;background:linear-gradient(#f4f6fa 1px,transparent 1px),linear-gradient(90deg,#f4f6fa 1px,transparent 1px);background-size:28px 28px}
+svg{width:100%;height:100%}.edge{stroke:#aeb7ca;stroke-width:4;transition:.35s}.edge.active{stroke:#6757d9;stroke-width:6}.edge.conflict{stroke:var(--red);stroke-width:8;stroke-dasharray:10 7;animation:pulse .75s infinite alternate}.node circle{fill:#fff;stroke:#8b96aa;stroke-width:4;transition:.35s}.node text{font-size:23px;font-weight:800;fill:var(--text);text-anchor:middle;dominant-baseline:central}.node.blue circle{fill:var(--blue);stroke:#244fa9}.node.orange circle{fill:var(--orange);stroke:#ac5c08}.node.blue text,.node.orange text{fill:#fff}.node.current circle{filter:drop-shadow(0 0 10px rgba(103,87,217,.65));stroke:#6757d9;stroke-width:7}.node.conflict circle{stroke:var(--red);stroke-width:8}@keyframes pulse{to{opacity:.35}}
+.legend{display:flex;gap:18px;flex-wrap:wrap;padding:14px 18px;border-top:1px solid #edf0f5;color:var(--muted);font-size:13px}.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px}.code{background:var(--code);color:#d9deed;height:430px;padding:14px 0;font-family:"SFMono-Regular",Consolas,monospace;font-size:13px;overflow:auto}.line{padding:3px 16px;white-space:pre;border-left:4px solid transparent;transition:.2s}.line.hot{background:#292e41;border-left-color:#8f7cff;color:#fff}.kw{color:#d787ff}.fn{color:#76bfff}.cm{color:#7f8ba6}.val{color:#ffc66d}
+.bottom{grid-column:1/-1;padding:18px}.status-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px}.stat{background:#f7f8fb;border:1px solid #e7eaf1;border-radius:12px;padding:12px}.stat small{display:block;color:var(--muted);margin-bottom:6px}.stat b{font-family:monospace}.explain{min-height:64px;padding:14px 16px;border-radius:12px;background:#eef2ff;border-left:5px solid #6757d9;line-height:1.55}.explain.bad{background:#fff0f2;border-color:var(--red);color:#9c2438}.controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px}button{border:0;border-radius:10px;padding:10px 15px;font-weight:750;cursor:pointer;background:#eef0f5;color:#283247}button.primary{background:#6757d9;color:#fff}button:disabled{opacity:.45;cursor:not-allowed}.step{margin-left:auto;color:var(--muted);font-variant-numeric:tabular-nums}.speed{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px}.result{font-size:20px}.result.false{color:var(--red)}
+@media(max-width:850px){.grid{grid-template-columns:1fr}.graph,.code{height:390px}.status-row{grid-template-columns:1fr}.top{display:block}.badge{display:inline-block;margin-top:12px}.step{margin-left:0;width:100%}}
+</style>
+</head>
+<body>
+<main class="app">
+ <div class="top"><div><h1>DFS 判断二分图：颜色冲突动画</h1><p><code>graph = [[1,2,3],[0,2],[0,1,3],[0,2]]</code><br>规则：每条边的两端必须是不同颜色。</p></div><div class="badge">预期输出：false</div></div>
+ <section class="grid">
+  <article class="card"><h2>图与染色过程</h2><div class="graph"><svg viewBox="0 0 560 420" role="img" aria-label="包含节点0、1、2、3的图">
+   <line id="e01" class="edge" x1="280" y1="65" x2="110" y2="210"/><line id="e02" class="edge" x1="280" y1="65" x2="280" y2="350"/><line id="e03" class="edge" x1="280" y1="65" x2="450" y2="210"/><line id="e12" class="edge" x1="110" y1="210" x2="280" y2="350"/><line id="e23" class="edge" x1="280" y1="350" x2="450" y2="210"/>
+   <g id="n0" class="node" transform="translate(280 65)"><circle r="35"/><text>0</text></g><g id="n1" class="node" transform="translate(110 210)"><circle r="35"/><text>1</text></g><g id="n2" class="node" transform="translate(280 350)"><circle r="35"/><text>2</text></g><g id="n3" class="node" transform="translate(450 210)"><circle r="35"/><text>3</text></g>
+  </svg></div><div class="legend"><span><i class="dot" style="background:#3972e8"></i>颜色 False / 蓝色组</span><span><i class="dot" style="background:#f39a37"></i>颜色 True / 橙色组</span><span><i class="dot" style="background:#df3d56"></i>同色冲突</span></div></article>
+  <article class="card"><h2>正在执行的代码</h2><div class="code" id="code">
+<div class="line" data-line="init">visited = [<span class="val">False</span>] * n</div><div class="line" data-line="init">color = [<span class="val">False</span>] * n</div><div class="line"> </div><div class="line" data-line="enter"><span class="kw">def</span> <span class="fn">dfs</span>(node):</div><div class="line" data-line="visit">    visited[node] = <span class="val">True</span></div><div class="line"> </div><div class="line" data-line="loop">    <span class="kw">for</span> nei <span class="kw">in</span> graph[node]:</div><div class="line" data-line="check">        <span class="kw">if not</span> visited[nei]:</div><div class="line" data-line="paint">            color[nei] = <span class="kw">not</span> color[node]</div><div class="line" data-line="recurse">            <span class="kw">if not</span> dfs(nei):</div><div class="line" data-line="returnFalse">                <span class="kw">return</span> <span class="val">False</span></div><div class="line"> </div><div class="line" data-line="conflict">        <span class="kw">elif</span> color[nei] == color[node]:</div><div class="line" data-line="returnFalse">            <span class="kw">return</span> <span class="val">False</span></div><div class="line"> </div><div class="line" data-line="returnTrue">    <span class="kw">return</span> <span class="val">True</span></div><div class="line"> </div><div class="line" data-line="outer"><span class="kw">for</span> node <span class="kw">in</span> range(n):</div><div class="line" data-line="outer">    <span class="kw">if not</span> visited[node]:</div><div class="line" data-line="start">        <span class="kw">if not</span> dfs(node):</div><div class="line" data-line="final">            <span class="kw">return</span> <span class="val">False</span></div>
+  </div></article>
+  <article class="card bottom">
+   <div class="status-row"><div class="stat"><small>visited</small><b id="visited">[F, F, F, F]</b></div><div class="stat"><small>color（B=蓝，O=橙，·=尚未染色）</small><b id="colors">[·, ·, ·, ·]</b></div><div class="stat"><small>递归栈</small><b id="stack">[]</b></div></div>
+   <div id="explain" class="explain">点击“下一步”或“自动播放”，观察 DFS 如何给相邻节点染成不同颜色。</div>
+   <div class="controls"><button id="prev">← 上一步</button><button id="play" class="primary">▶ 自动播放</button><button id="next">下一步 →</button><button id="reset">↺ 重置</button><label class="speed">速度 <input id="speed" type="range" min="400" max="1800" step="200" value="1000"></label><span id="step" class="step">步骤 0 / 10</span></div>
+  </article>
+ </section>
+</main>
+<script>
+const S=[
+ {line:'init',v:[0,0,0,0],c:[null,null,null,null],st:[],msg:'初始化：所有节点都未访问，color 默认是 False。真正的颜色只有在节点被纳入 DFS 时才有意义。'},
+ {line:'outer',v:[0,0,0,0],c:[null,null,null,null],st:[],msg:'外层循环从节点 0 开始。图可能不连通，所以每个未访问节点都要作为新起点。'},
+ {line:'start',v:[0,0,0,0],c:['B',null,null,null],st:[],cur:0,msg:'节点 0 作为第一个连通分量的起点，采用默认蓝色（False）。'},
+ {line:'visit',v:[1,0,0,0],c:['B',null,null,null],st:[0],cur:0,msg:'进入 dfs(0)：将 visited[0] 标记为 True。'},
+ {line:'loop',v:[1,0,0,0],c:['B',null,null,null],st:[0],cur:0,edge:'e01',msg:'检查节点 0 的第一个邻居 1。'},
+ {line:'paint',v:[1,0,0,0],c:['B','O',null,null],st:[0],cur:1,edge:'e01',msg:'节点 1 未访问，把它染成与节点 0 相反的橙色（True）。'},
+ {line:'recurse',v:[1,0,0,0],c:['B','O',null,null],st:[0,1],cur:1,edge:'e01',msg:'递归进入 dfs(1)。'},
+ {line:'visit',v:[1,1,0,0],c:['B','O',null,null],st:[0,1],cur:1,msg:'将 visited[1] 标记为 True。邻居 0 已访问但颜色不同，所以合法。'},
+ {line:'paint',v:[1,1,0,0],c:['B','O','B',null],st:[0,1],cur:2,edge:'e12',msg:'接着检查邻居 2：它未访问，因此应染成与节点 1 相反的蓝色。'},
+ {line:'visit',v:[1,1,1,0],c:['B','O','B',null],st:[0,1,2],cur:2,msg:'递归进入 dfs(2)，并标记节点 2 已访问。'},
+ {line:'conflict',v:[1,1,1,0],c:['B','O','B',null],st:[0,1,2],cur:2,edge:'e02',bad:true,msg:'冲突！节点 2 检查邻居 0：两者都为蓝色，边 2—0 的两端颜色相同。'},
+ {line:'final',v:[1,1,1,0],c:['B','O','B',null],st:[],edge:'e02',bad:true,result:true,msg:'因此 dfs 返回 False，并一路向上传递。节点 3 无需继续检查，最终答案是 false。'}
+];
+let i=0,timer=null;const $=x=>document.getElementById(x);
+function render(){const s=S[i];document.querySelectorAll('.line').forEach(x=>x.classList.toggle('hot',x.dataset.line===s.line));document.querySelectorAll('.node').forEach((x,k)=>{x.className.baseVal='node'+(s.c[k]?' '+(s.c[k]==='B'?'blue':'orange'):'')+(s.cur===k?' current':'')+(s.bad&&(k===0||k===2)?' conflict':'')});document.querySelectorAll('.edge').forEach(x=>x.className.baseVal='edge'+(x.id===s.edge?(s.bad?' conflict':' active'):''));$('visited').textContent='['+s.v.map(x=>x?'T':'F').join(', ')+']';$('colors').textContent='['+s.c.map(x=>x||'·').join(', ')+']';$('stack').textContent='['+s.st.join(' → ')+']';$('explain').textContent=s.msg;$('explain').className='explain'+(s.bad?' bad':'');$('step').textContent=`步骤 ${i} / ${S.length-1}`;$('prev').disabled=i===0;$('next').disabled=i===S.length-1;if(s.result)$('step').innerHTML=`<b class="result false">结果：false</b> · 步骤 ${i}/${S.length-1}`}
+function stop(){clearInterval(timer);timer=null;$('play').textContent='▶ 自动播放'}function play(){if(timer){stop();return}if(i===S.length-1)i=0;render();$('play').textContent='Ⅱ 暂停';timer=setInterval(()=>{if(i<S.length-1){i++;render()}else stop()},2000-Number($('speed').value)+500)}
+$('next').onclick=()=>{stop();if(i<S.length-1)i++;render()};$('prev').onclick=()=>{stop();if(i>0)i--;render()};$('reset').onclick=()=>{stop();i=0;render()};$('play').onclick=play;$('speed').oninput=()=>{if(timer){stop();play()}};render();
+</script>
+</body>
+</html>
